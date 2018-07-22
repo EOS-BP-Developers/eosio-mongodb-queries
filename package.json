@@ -1,8 +1,13 @@
 {
   "name": "eosio-mongodb-queries",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "EOSIO MongoDB Queries",
   "main": "index.js",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "src"
+  ],
   "scripts": {
     "test": "tslint --project .",
     "prepare": "tsc",
@@ -27,7 +32,7 @@
   },
   "homepage": "https://github.com/EOS-Nation/eosio-mongodb-queries#readme",
   "devDependencies": {
-    "@types/mongodb": "^3.1.2",
+    "@types/mongodb": "*",
     "documentation": "*",
     "mongodb": "*",
     "tslint": "*",
