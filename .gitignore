@@ -1,3 +1,6 @@
+# Typescript library
+*.js
+
 # Logs
 logs
 *.log
