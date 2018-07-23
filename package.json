@@ -1,16 +1,20 @@
 {
   "name": "eosio-mongodb-queries",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "EOSIO MongoDB Queries",
   "main": "index.js",
+  "types": "index.d.ts",
+  "browser": "dist/eosio-mongodb-queries.js",
   "files": [
+    "dist/eosio-mongodb-queries.js",
+    "dist/eosio-mongodb-queries.d.ts",
     "index.js",
     "index.d.ts",
     "src"
   ],
   "scripts": {
     "test": "tslint --project .",
-    "prepare": "tsc",
+    "prepare": "tsc index.ts --module amd --outFile dist/eosio-mongodb-queries.js --declaration",
     "postpublish": "git push && git push --tags",
     "docs": "tsc && documentation readme index.js --section=API"
   },

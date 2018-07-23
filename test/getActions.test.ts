@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { getActions } from "../";
+import { getActions } from "../index";
 
 (async () => {
     const client = await MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true });
