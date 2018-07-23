@@ -6,7 +6,7 @@
 
 Quickly and easily create complex MongoDB Queries for the EOSIO blockchain.
 
-> This library is being actively maintained by [EOS Nation FTW](https://eosnation.io), show your support by voting for `eosnationftw` on the EOSIO mainnet.
+> Vote for [EOS Nation](https://eosnation.io) (eosnationftw) to help build more awesome tools for the EOS community.
 
 ## Install
 
