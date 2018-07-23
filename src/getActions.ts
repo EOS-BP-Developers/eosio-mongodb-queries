@@ -12,6 +12,8 @@ import { isString } from "util";
  * @param {Array<string>} [options.accountNameKeys] Filter accountName by specific keys
  * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
  * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Head Block Number
+ * @param {number} [options.skip] Takes a positive integer that specifies the maximum number of documents to skip
+ * @param {number} [options.limit] Takes a positive integer that specifies the maximum number of documents to pass along
  * @returns {AggregationCursor} MongoDB Aggregation Cursor
  * @example
  * const account = "eosio";
@@ -21,6 +23,8 @@ import { isString } from "util";
  *     accountNameKeys: ["data.from", "data.receiver"],
  *     gte_block_num: 0,
  *     lte_block_num: Infinity,
+ *     skip: 0,
+ *     limit: 25
  * };
  * const results = await getActions(client, account, names, options);
  * console.log(await results.toArray());
@@ -30,6 +34,8 @@ export function getActions(client: MongoClient, account: string, names: string[]
     accountNameKeys?: string[],
     lte_block_num?: number,
     gte_block_num?: number,
+    skip?: number,
+    limit?: number,
 } = {}) {
     // Setup MongoDB collection
     const db = client.db("EOS");
@@ -94,6 +100,10 @@ export function getActions(client: MongoClient, account: string, names: string[]
     // Filter by Reference Block Number
     if (options.lte_block_num) { pipeline.push({$match: {ref_block_num: {$lte: options.lte_block_num }}}); }
     if (options.gte_block_num) { pipeline.push({$match: {ref_block_num: {$gte: options.gte_block_num }}}); }
+
+    // Support Pagination using Skip & Limit
+    if (options.limit) { pipeline.push({$limit: options.limit }); }
+    if (options.skip) { pipeline.push({$skip: options.skip }); }
 
     return collection.aggregate(pipeline);
 }

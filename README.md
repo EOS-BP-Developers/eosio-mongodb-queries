@@ -144,6 +144,8 @@ Get Account Actions
     -   `options.accountNameKeys` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter accountName by specific keys
     -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Less-than or equal (&lt;=) the Reference Block Number
     -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Greater-than or equal (>=) the Head Block Number
+    -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Takes a positive integer that specifies the maximum number of documents to skip
+    -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Takes a positive integer that specifies the maximum number of documents to pass along
 
 #### Examples
 
@@ -155,6 +157,8 @@ const options = {
     accountNameKeys: ["data.from", "data.receiver"],
     gte_block_num: 0,
     lte_block_num: Infinity,
+    skip: 0,
+    limit: 25
 };
 const results = await getActions(client, account, names, options);
 console.log(await results.toArray());
