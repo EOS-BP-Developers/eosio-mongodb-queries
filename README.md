@@ -26,21 +26,24 @@ $ yarn add eosio-mongodb-queries
 
 ```javascript
 import { MongoClient } from "mongodb";
-import { getActions } from "eosio-mongodb-queries";
+import { getAccount } from "eosio-mongodb-queries";
 
 (async () => {
     const client = await MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true });
 
-    // Parameters
-    const actions = ["delegatebw", "undelegatebw"];
+    // Optional Parameters
     const options = {
-        accountName: "eosnationftw",
-        accountNameKeys: ["data.from", "data.receiver"],
         gte_block_num: 0,
         lte_block_num: Infinity,
     };
-    const results = await getActions(client, actions, options);
-    console.log(await results.toArray());
+    const result = await getAccount(client, "heztcnbsgige", options);
+    // {
+    //   accountName: 'heztcnbsgige',
+    //   weight: 6.0261,
+    //   ref_block_num: 445,
+    //   stake_net_quantity: 3.0131,
+    //   stake_cpu_quantity: 3.013
+    // }
 })();
 ```
 
@@ -65,17 +68,22 @@ mongodb-uri = mongodb://localhost:27017
 
 To allow actions to be decoded from the ABI, you must replay all blocks from the genesis.
 
-```
-$ nodeos --replay-blockchain --hard-replay-blockchain --mongodb-wipe
-```
+    $ nodeos --replay-blockchain --hard-replay-blockchain --mongodb-wipe
 
 > [More Information on EOSIO GitHub](https://github.com/EOSIO/eos/pull/4304)
 
 ## Query Ideas
 
-- [ ] Vote Tally for `eosio.forum` (submitted by [Denis](https://t.me/deniscarrier) from [EOS Nation](https://eosnation.io))
-- [ ] Block Producer votes & positions (submitted by [Nathan](https://t.me/nsrempel) from [GenerEOS](https://www.genereos.io))
-- [ ] All-time bids or current bid (submitted by [Syed](https://t.me/syed_jafri) from [EOS Cafe](https://www.eos.cafe))
+-   [ ] Vote Tally for `eosio.forum` (submitted by [Denis](https://t.me/deniscarrier) from [EOS Nation](https://eosnation.io))
+-   [ ] Block Producer votes & positions (submitted by [Nathan](https://t.me/nsrempel) from [GenerEOS](https://www.genereos.io))
+-   [ ] All-time bids or current bid (submitted by [Syed](https://t.me/syed_jafri) from [EOS Cafe](https://www.eos.cafe))
+
+## References
+
+**MongoDB Pipeline**
+
+-   <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/>
+-   <https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/>
 
 ## API
 
@@ -83,9 +91,43 @@ $ nodeos --replay-blockchain --hard-replay-blockchain --mongodb-wipe
 
 #### Table of Contents
 
--   [getActions](#getactions)
+-   [getAccount](#getaccount)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
+-   [getActions](#getactions)
+    -   [Parameters](#parameters-1)
+    -   [Examples](#examples-1)
+
+### getAccount
+
+Get Account Details
+
+#### Parameters
+
+-   `client` **MongoClient** MongoDB Client
+-   `accountName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account Name
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Less-than or equal (&lt;=) the Reference Block Number
+    -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Greater-than or equal (>=) the Head Block Number
+
+#### Examples
+
+```javascript
+const options = {
+  gte_block_num: 0,
+  lte_block_num: Infinity,
+};
+const result = await getAccount(client, "heztcnbsgige", options);
+// {
+//   accountName: 'heztcnbsgige',
+//   weight: 6.0261,
+//   ref_block_num: 445,
+//   stake_net_quantity: 3.0131,
+//   stake_cpu_quantity: 3.013
+// }
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Account Details
 
 ### getActions
 
@@ -96,7 +138,7 @@ Get Account Actions
 -   `client` **MongoClient** MongoDB Client
 -   `filterActions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** Filter by actions names
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
-    -   `options.accountName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Account Name (must also include "options.accountNameKeys")
+    -   `options.accountName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Account Name (must also include `accountNameKeys`)
     -   `options.accountNameKeys` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter accountName by specific keys
     -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Less-than or equal (&lt;=) the Reference Block Number
     -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Greater-than or equal (>=) the Head Block Number

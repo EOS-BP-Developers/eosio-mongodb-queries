@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import { getActions } from "../index";
+import { getActions } from "..";
 
 (async () => {
     const client = await MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true });
@@ -14,4 +14,5 @@ import { getActions } from "../index";
     };
     const results = await getActions(client, actions, options);
     console.log(await results.toArray());
+    client.close();
 })();

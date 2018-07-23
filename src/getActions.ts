@@ -6,7 +6,7 @@ import { MongoClient } from "mongodb";
  * @param {MongoClient} client MongoDB Client
  * @param {Array<string>} filterActions Filter by actions names
  * @param {Object} [options={}] Optional Parameters
- * @param {string} [options.accountName] Account Name (must also include "options.accountNameKeys")
+ * @param {string} [options.accountName] Account Name (must also include `accountNameKeys`)
  * @param {Array<string>} [options.accountNameKeys] Filter accountName by specific keys
  * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
  * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Head Block Number
@@ -42,8 +42,6 @@ export function getActions(client: MongoClient, filterActions: string[], options
     }
 
     // MongoDB Pipeline
-    // https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
-    // https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/
     let pipeline: any = [];
 
     // Filter accounts based on specific fields using name
