@@ -11,11 +11,12 @@ import { getActions } from "./getActions";
  * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Head Block Number
  * @returns {Object} Account Details
  * @example
+ * const accountName = "heztcnbsgige";
  * const options = {
  *   gte_block_num: 0,
  *   lte_block_num: Infinity,
  * };
- * const result = await getAccount(client, "heztcnbsgige", options);
+ * const result = await getAccount(client, accountName, options);
  * // {
  * //   accountName: 'heztcnbsgige',
  * //   weight: 6.0261,
@@ -29,7 +30,7 @@ export async function getAccount(client: MongoClient, accountName: string, optio
     gte_block_num?: number,
 } = {}) {
     // Get Actions
-    const actions = await getActions(client, ["delegatebw", "undelegatebw"], Object.assign(options, {
+    const actions = await getActions(client, "eosio", ["delegatebw", "undelegatebw"], Object.assign(options, {
         accountName,
         accountNameKeys: ["data.from", "data.receiver"],
     })).toArray();

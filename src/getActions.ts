@@ -1,10 +1,12 @@
 import { MongoClient } from "mongodb";
+import { isString } from "util";
 
 /**
  * Get Account Actions
  *
  * @param {MongoClient} client MongoDB Client
- * @param {Array<string>} filterActions Filter by actions names
+ * @param {string} account Filter by account contract
+ * @param {Array<string>} names Filter by action names
  * @param {Object} [options={}] Optional Parameters
  * @param {string} [options.accountName] Account Name (must also include `accountNameKeys`)
  * @param {Array<string>} [options.accountNameKeys] Filter accountName by specific keys
@@ -12,17 +14,18 @@ import { MongoClient } from "mongodb";
  * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Head Block Number
  * @returns {AggregationCursor} MongoDB Aggregation Cursor
  * @example
- * const actions = ["delegatebw", "undelegatebw"];
+ * const account = "eosio";
+ * const names = ["delegatebw", "undelegatebw"];
  * const options = {
  *     accountName: "eosnationftw",
  *     accountNameKeys: ["data.from", "data.receiver"],
  *     gte_block_num: 0,
  *     lte_block_num: Infinity,
  * };
- * const results = await getActions(client, actions, options);
+ * const results = await getActions(client, account, names, options);
  * console.log(await results.toArray());
  */
-export function getActions(client: MongoClient, filterActions: string[], options: {
+export function getActions(client: MongoClient, account: string, names: string[], options: {
     accountName?: string,
     accountNameKeys?: string[],
     lte_block_num?: number,
@@ -56,11 +59,14 @@ export function getActions(client: MongoClient, filterActions: string[], options
     }
 
     pipeline = pipeline.concat([
-        // Filter only specific actions
+        // Filter only specific contract account & actions names
         {
-            $match: { $or: filterActions.map((action) => {
-                return { name: action };
-            })},
+            $match: {
+                account,
+                $or: names.map((name) => {
+                    return { name };
+                }),
+            },
         },
         // Get Reference Block Number from Transaction Id
         {

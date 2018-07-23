@@ -113,11 +113,12 @@ Get Account Details
 #### Examples
 
 ```javascript
+const accountName = "heztcnbsgige";
 const options = {
   gte_block_num: 0,
   lte_block_num: Infinity,
 };
-const result = await getAccount(client, "heztcnbsgige", options);
+const result = await getAccount(client, accountName, options);
 // {
 //   accountName: 'heztcnbsgige',
 //   weight: 6.0261,
@@ -136,7 +137,8 @@ Get Account Actions
 #### Parameters
 
 -   `client` **MongoClient** MongoDB Client
--   `filterActions` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** Filter by actions names
+-   `account` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Filter by account contract
+-   `names` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>** Filter by action names
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
     -   `options.accountName` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Account Name (must also include `accountNameKeys`)
     -   `options.accountNameKeys` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter accountName by specific keys
@@ -146,14 +148,15 @@ Get Account Actions
 #### Examples
 
 ```javascript
-const actions = ["delegatebw", "undelegatebw"];
+const account = "eosio";
+const names = ["delegatebw", "undelegatebw"];
 const options = {
     accountName: "eosnationftw",
     accountNameKeys: ["data.from", "data.receiver"],
     gte_block_num: 0,
     lte_block_num: Infinity,
 };
-const results = await getActions(client, actions, options);
+const results = await getActions(client, account, names, options);
 console.log(await results.toArray());
 ```
 
