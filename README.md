@@ -16,6 +16,12 @@ Quickly and easily create complex MongoDB Queries for the EOSIO blockchain.
 $ yarn add eosio-mongodb-queries
 ```
 
+**web**
+
+```html
+<script src="https://wzrd.in/standalone/eosio-mongodb-queries@latest"></script>
+```
+
 ## Quickstart
 
 ```javascript
@@ -35,7 +41,7 @@ import { getActions } from "eosio-mongodb-queries";
     };
     const results = await getActions(client, actions, options);
     console.log(await results.toArray());
-})()
+})();
 ```
 
 ## API
