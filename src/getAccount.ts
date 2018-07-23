@@ -8,7 +8,7 @@ import { getActions } from "./getActions";
  * @param {string} accountName Account Name
  * @param {Object} [options={}] Optional Parameters
  * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
- * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Head Block Number
+ * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Reference Block Number
  * @returns {Object} Account Details
  * @example
  * const accountName = "heztcnbsgige";

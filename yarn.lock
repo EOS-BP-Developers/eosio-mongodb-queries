@@ -12,7 +12,7 @@
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@types/events/-/events-1.2.0.tgz#81a6731ce4df43619e5c8c945383b3e62a89ea86"
 
-"@types/mongodb@^3.1.2":
+"@types/mongodb@*":
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.1.2.tgz#fe5d84a151025b00104357805e23d62217e681cc"
   dependencies:

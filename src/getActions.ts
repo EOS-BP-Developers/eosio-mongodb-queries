@@ -11,7 +11,7 @@ import { isString } from "util";
  * @param {string} [options.accountName] Account Name (must also include `accountNameKeys`)
  * @param {Array<string>} [options.accountNameKeys] Filter accountName by specific keys
  * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
- * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Head Block Number
+ * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Takes a positive integer that specifies the maximum number of documents to skip
  * @param {number} [options.limit] Takes a positive integer that specifies the maximum number of documents to pass along
  * @returns {AggregationCursor} MongoDB Aggregation Cursor
