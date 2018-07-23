@@ -74,8 +74,8 @@ $ nodeos --replay-blockchain --hard-replay-blockchain --mongodb-wipe
 ## Query Ideas
 
 - [ ] Vote Tally for `eosio.forum` (submitted by [Denis](https://t.me/deniscarrier) from [EOS Nation](https://eosnation.io))
-- [ ] Block Producer votes & positions (submitted by [Nathan](https://t.me/nsrempel)" from [GenerEOS](https://www.genereos.io))
-- [ ] All-time bids or current bid (submitted by [Syed](https://t.me/syed_jafri)" from [EOS Cafe](https://www.eos.cafe))
+- [ ] Block Producer votes & positions (submitted by [Nathan](https://t.me/nsrempel) from [GenerEOS](https://www.genereos.io))
+- [ ] All-time bids or current bid (submitted by [Syed](https://t.me/syed_jafri) from [EOS Cafe](https://www.eos.cafe))
 
 ## API
 
