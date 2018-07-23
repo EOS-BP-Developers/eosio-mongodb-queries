@@ -13,13 +13,7 @@ Quickly and easily create complex MongoDB Queries for the EOSIO blockchain.
 **npm**
 
 ```bash
-$ npm install --save eosio-mongodb-queries
-```
-
-**web**
-
-```html
-<script src="https://wzrd.in/standalone/eosio-mongodb-queries@latest"></script>
+$ yarn add eosio-mongodb-queries
 ```
 
 ## Quickstart
