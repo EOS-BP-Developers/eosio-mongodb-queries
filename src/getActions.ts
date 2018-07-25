@@ -105,12 +105,13 @@ export function getActions(client: MongoClient, options: {
     pipeline.push({
         $project: {
             _id: 0,
-            account: 1,
-            name: 1,
-            data: 1,
             trx_id: 1,
             block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
             block_num: { $arrayElemAt: [ "$transactions.block_num", 0 ] },
+            account: 1,
+            name: 1,
+            authorization: 1,
+            data: 1,
         },
     });
 
