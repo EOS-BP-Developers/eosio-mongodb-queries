@@ -19,8 +19,8 @@ import { getActions } from "./getActions";
  * const result = await getAccount(client, name, options);
  * // {
  * //   name: 'eosnationftw',
- * //   weight: 1.8,
  * //   ref_block_num: 61025,
+ * //   stake_quantity: 1.8,
  * //   stake_net_quantity: 0.9,
  * //   stake_cpu_quantity: 0.9
  * // }
@@ -42,8 +42,8 @@ export async function getAccount(client: MongoClient, name: string, options: {
     if (!actions.length) { throw new Error("no account found"); }
 
     // Counters
-    let weight = 0;
     let ref_block_num = 0;
+    let stake_quantity = 0;
     let stake_net_quantity = 0;
     let stake_cpu_quantity = 0;
 
@@ -57,7 +57,7 @@ export async function getAccount(client: MongoClient, name: string, options: {
                 const stake_cpu_quantity_number = Number(action.data.stake_cpu_quantity.replace(" EOS", ""));
                 stake_net_quantity += stake_net_quantity_number;
                 stake_cpu_quantity += stake_cpu_quantity_number;
-                weight += stake_net_quantity_number + stake_cpu_quantity_number;
+                stake_quantity += stake_net_quantity_number + stake_cpu_quantity_number;
             }
             break;
         case "undelegatebw":
@@ -66,7 +66,7 @@ export async function getAccount(client: MongoClient, name: string, options: {
                 const unstake_cpu_quantity_number = Number(action.data.unstake_cpu_quantity.replace(" EOS", ""));
                 stake_net_quantity -= unstake_net_quantity_number;
                 stake_cpu_quantity -= unstake_cpu_quantity_number;
-                weight -= unstake_net_quantity_number + unstake_cpu_quantity_number;
+                stake_quantity -= unstake_net_quantity_number + unstake_cpu_quantity_number;
             }
             break;
         }
@@ -74,8 +74,8 @@ export async function getAccount(client: MongoClient, name: string, options: {
 
     return {
         name,
-        weight,
         ref_block_num,
+        stake_quantity,
         stake_net_quantity,
         stake_cpu_quantity,
     };

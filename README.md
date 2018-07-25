@@ -39,8 +39,8 @@ import { getAccount } from "eosio-mongodb-queries";
     const result = await getAccount(client, "eosnationftw", options);
     // {
     //     name: 'eosnationftw',
-    //     weight: 1.8,
     //     ref_block_num: 61025,
+    //     stake_quantity: 1.8,
     //     stake_net_quantity: 0.9,
     //     stake_cpu_quantity: 0.9
     // }
@@ -121,8 +121,8 @@ const options = {
 const result = await getAccount(client, name, options);
 // {
 //   name: 'eosnationftw',
-//   weight: 1.8,
 //   ref_block_num: 61025,
+//   stake_quantity: 1.8,
 //   stake_net_quantity: 0.9,
 //   stake_cpu_quantity: 0.9
 // }
