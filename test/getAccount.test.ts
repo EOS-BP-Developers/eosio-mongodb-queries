@@ -7,7 +7,11 @@ import { getAccount } from "..";
         gte_block_num: 0,
         lte_block_num: Infinity,
     };
-    const results = await getAccount(client, "heztcnbsgige", options);
-    console.log(results);
+    try {
+        const results = await getAccount(client, "eosnationftw", options);
+        console.log(results);
+    } catch (e) {
+        console.log(e);
+    }
     client.close();
 })();

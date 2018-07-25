@@ -1,37 +1,35 @@
 import { MongoClient } from "mongodb";
-import { isString } from "util";
 
 /**
  * Get Account Actions
  *
  * @param {MongoClient} client MongoDB Client
- * @param {string} account Filter by account contract
- * @param {Array<string>} names Filter by action names
  * @param {Object} [options={}] Optional Parameters
- * @param {string} [options.accountName] Account Name (must also include `accountNameKeys`)
- * @param {Array<string>} [options.accountNameKeys] Filter accountName by specific keys
+ * @param {Array<string>} [options.accounts] Filter by account contracts (eg: ["eosio","eosio.token"])
+ * @param {Array<string>} [options.names] Filter by action names (eg: ["undelegatebw", "delegatebw"])
+ * @param {Array<object>} [options.data] Filter by data entries (eg: [{"data.from": "eosio"}])
  * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
  * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Takes a positive integer that specifies the maximum number of documents to skip
  * @param {number} [options.limit] Takes a positive integer that specifies the maximum number of documents to pass along
  * @returns {AggregationCursor} MongoDB Aggregation Cursor
  * @example
- * const account = "eosio";
- * const names = ["delegatebw", "undelegatebw"];
  * const options = {
- *     accountName: "eosnationftw",
- *     accountNameKeys: ["data.from", "data.receiver"],
+ *     accounts: ["eosio"],
+ *     names: ["delegatebw", "undelegatebw"],
+ *     data: [{from: "eosnationftw"}, {receiver: "eosnationftw"}],
  *     gte_block_num: 0,
  *     lte_block_num: Infinity,
  *     skip: 0,
- *     limit: 25
+ *     limit: 25,
  * };
- * const results = await getActions(client, account, names, options);
+ * const results = await getActions(client, options);
  * console.log(await results.toArray());
  */
-export function getActions(client: MongoClient, account: string, names: string[], options: {
-    accountName?: string,
-    accountNameKeys?: string[],
+export function getActions(client: MongoClient, options: {
+    accounts?: string[],
+    names?: string[],
+    data?: object[],
     lte_block_num?: number,
     gte_block_num?: number,
     skip?: number,
@@ -41,61 +39,65 @@ export function getActions(client: MongoClient, account: string, names: string[]
     const db = client.db("EOS");
     const collection = db.collection("actions");
 
-    // Optional Parameters
-    const accountName = options.accountName;
-    const accountNameKeys = options.accountNameKeys || [];
-
-    // Asserts
-    if (accountName && !accountNameKeys.length) {
-        throw new Error("both accountName & accountNameKeys must be included");
-    }
-
     // MongoDB Pipeline
-    let pipeline: any = [];
+    const pipeline: any = [];
 
-    // Filter accounts based on specific fields using name
-    if (accountName && accountNameKeys) {
+    // Filter account contracts
+    // eg: ["eosio", "eosio.token"]
+    if (options.accounts) {
         pipeline.push({
-            $match: { $or: accountNameKeys.map((field) => {
-                const filter: any = {};
-                filter[field] = accountName;
-                return filter;
-            })},
+            $match: {
+                $or: options.accounts.map((account) => {
+                    return { account };
+                }),
+            },
         });
     }
 
-    pipeline = pipeline.concat([
-        // Filter only specific contract account & actions names
-        {
+    // Filter action names
+    // eg: ["delegatebw", "undelegatebw"]
+    if (options.names) {
+        pipeline.push({
             $match: {
-                account,
-                $or: names.map((name) => {
+                $or: options.names.map((name) => {
                     return { name };
                 }),
             },
-        },
-        // Get Reference Block Number from Transaction Id
-        {
-            $graphLookup: {
-                from: "transactions",
-                startWith: "$trx_id",
-                connectFromField: "trx_id",
-                connectToField: "trx_id",
-                as: "transaction",
+        });
+    }
+
+    // Filter by data entry
+    // eg: [{from: "eosio"}]
+    if (options.data) {
+        pipeline.push({
+            $match: {
+                $or: options.data,
             },
+        });
+    }
+
+    // Get Reference Block Number from Transaction Id
+    pipeline.push({
+        $graphLookup: {
+            from: "transactions",
+            startWith: "$trx_id",
+            connectFromField: "trx_id",
+            connectToField: "trx_id",
+            as: "transaction",
         },
-        // Filter only required fields
-        {
-            $project: {
-                _id: 0,
-                account: 1,
-                name: 1,
-                data: 1,
-                trx_id: 1,
-                ref_block_num: { $arrayElemAt: [ "$transaction.transaction_header.ref_block_num", 0 ] },
-            },
+    });
+
+    // Filter only required fields
+    pipeline.push({
+        $project: {
+            _id: 0,
+            account: 1,
+            name: 1,
+            data: 1,
+            trx_id: 1,
+            ref_block_num: { $arrayElemAt: [ "$transaction.transaction_header.ref_block_num", 0 ] },
         },
-    ]);
+    });
 
     // Filter by Reference Block Number
     if (options.lte_block_num) { pipeline.push({$match: {ref_block_num: {$lte: options.lte_block_num }}}); }
