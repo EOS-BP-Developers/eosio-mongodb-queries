@@ -44,7 +44,7 @@ export function getActions(client: MongoClient, options: {
 
     // Filter account contracts
     // eg: ["eosio", "eosio.token"]
-    if (options.accounts) {
+    if (options.accounts && options.accounts.length) {
         pipeline.push({
             $match: {
                 $or: options.accounts.map((account) => {
@@ -56,7 +56,7 @@ export function getActions(client: MongoClient, options: {
 
     // Filter action names
     // eg: ["delegatebw", "undelegatebw"]
-    if (options.names) {
+    if (options.names && options.names.length) {
         pipeline.push({
             $match: {
                 $or: options.names.map((name) => {
@@ -68,7 +68,7 @@ export function getActions(client: MongoClient, options: {
 
     // Filter by data entry
     // eg: [{from: "eosio"}]
-    if (options.data) {
+    if (options.data && options.data.length) {
         pipeline.push({
             $match: {
                 $or: options.data,
