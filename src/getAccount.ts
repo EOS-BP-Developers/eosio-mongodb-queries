@@ -49,9 +49,9 @@ export async function getAccount(client: MongoClient, name: string, options: {
 
     for (const action of actions) {
         if (action.block_num > block_num) { block_num = action.block_num; }
-
         switch (action.name) {
-        case "delegatebw":
+            // Add total stake
+            case "delegatebw":
             if (name === action.data.receiver) {
                 const stake_net_quantity_number = Number(action.data.stake_net_quantity.replace(" EOS", ""));
                 const stake_cpu_quantity_number = Number(action.data.stake_cpu_quantity.replace(" EOS", ""));
@@ -60,7 +60,8 @@ export async function getAccount(client: MongoClient, name: string, options: {
                 stake_quantity += stake_net_quantity_number + stake_cpu_quantity_number;
             }
             break;
-        case "undelegatebw":
+            // Remove total stake
+            case "undelegatebw":
             if (name === action.data.from) {
                 const unstake_net_quantity_number = Number(action.data.unstake_net_quantity.replace(" EOS", ""));
                 const unstake_cpu_quantity_number = Number(action.data.unstake_cpu_quantity.replace(" EOS", ""));
@@ -71,6 +72,8 @@ export async function getAccount(client: MongoClient, name: string, options: {
             break;
         }
     }
+    // Round to 4 decimals
+    stake_quantity = Number(stake_quantity.toFixed(4));
 
     return {
         name,
