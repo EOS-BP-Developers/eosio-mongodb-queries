@@ -104,8 +104,8 @@ export function getActions(client: MongoClient, options: {
     if (options.gte_block_num) { pipeline.push({$match: {ref_block_num: {$gte: options.gte_block_num }}}); }
 
     // Support Pagination using Skip & Limit
-    if (options.limit) { pipeline.push({$limit: options.limit }); }
     if (options.skip) { pipeline.push({$skip: options.skip }); }
+    if (options.limit) { pipeline.push({$limit: options.limit }); }
 
     return collection.aggregate(pipeline);
 }
