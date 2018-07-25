@@ -8,20 +8,18 @@ import { MongoClient } from "mongodb";
  * @param {Array<string>} [options.accounts] Filter by account contracts (eg: ["eosio","eosio.token"])
  * @param {Array<string>} [options.names] Filter by action names (eg: ["undelegatebw", "delegatebw"])
  * @param {Array<object>} [options.data] Filter by data entries (eg: [{"data.from": "eosio"}])
- * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
- * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Reference Block Number
- * @param {number} [options.skip] Takes a positive integer that specifies the maximum number of documents to skip
- * @param {number} [options.limit] Takes a positive integer that specifies the maximum number of documents to pass along
+ * @param {string} [options.trx_id] Filter by exact Transaction Id
+ * @param {number} [options.ref_block_num] Filter by exact Reference Block Number
+ * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
+ * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
+ * @param {number} [options.skip] Skips number of documents
+ * @param {number} [options.limit] Limit the maximum amount of of actions returned
  * @returns {AggregationCursor} MongoDB Aggregation Cursor
  * @example
  * const options = {
  *     accounts: ["eosio"],
  *     names: ["delegatebw", "undelegatebw"],
  *     data: [{from: "eosnationftw"}, {receiver: "eosnationftw"}],
- *     gte_block_num: 0,
- *     lte_block_num: Infinity,
- *     skip: 0,
- *     limit: 25,
  * };
  * const results = await getActions(client, options);
  * console.log(await results.toArray());
@@ -30,6 +28,8 @@ export function getActions(client: MongoClient, options: {
     accounts?: string[],
     names?: string[],
     data?: object[],
+    trx_id?: string,
+    ref_block_num?: number,
     lte_block_num?: number,
     gte_block_num?: number,
     skip?: number,
@@ -41,6 +41,9 @@ export function getActions(client: MongoClient, options: {
 
     // MongoDB Pipeline
     const pipeline: any = [];
+
+    // Filter by Transaction ID
+    if (options.trx_id) { pipeline.push({$match: { trx_id: options.trx_id }}); }
 
     // Filter account contracts
     // eg: ["eosio", "eosio.token"]
@@ -100,8 +103,9 @@ export function getActions(client: MongoClient, options: {
     });
 
     // Filter by Reference Block Number
-    if (options.lte_block_num) { pipeline.push({$match: {ref_block_num: {$lte: options.lte_block_num }}}); }
-    if (options.gte_block_num) { pipeline.push({$match: {ref_block_num: {$gte: options.gte_block_num }}}); }
+    if (options.ref_block_num) { pipeline.push({$match: { ref_block_num: options.ref_block_num }}); }
+    if (options.lte_block_num) { pipeline.push({$match: { ref_block_num: {$lte: options.lte_block_num }}}); }
+    if (options.gte_block_num) { pipeline.push({$match: { ref_block_num: {$gte: options.gte_block_num }}}); }
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
