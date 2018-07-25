@@ -38,11 +38,11 @@ import { getAccount } from "eosio-mongodb-queries";
     };
     const result = await getAccount(client, "eosnationftw", options);
     // {
-    //     name: 'eosnationftw',
-    //     ref_block_num: 61025,
-    //     stake_quantity: 1.8,
-    //     stake_net_quantity: 0.9,
-    //     stake_cpu_quantity: 0.9
+    //   name: 'eosnationftw',
+    //   block_num: 6101090,
+    //   stake_quantity: 2.8,
+    //   stake_net_quantity: 0.4,
+    //   stake_cpu_quantity: 2.4
     // }
 })();
 ```
@@ -107,8 +107,8 @@ Get Account Details
 -   `client` **MongoClient** MongoDB Client
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account Name
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
-    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Less-than or equal (&lt;=) the Reference Block Number
-    -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Greater-than or equal (>=) the Reference Block Number
+    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
+    -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
 
 #### Examples
 
@@ -121,10 +121,10 @@ const options = {
 const result = await getAccount(client, name, options);
 // {
 //   name: 'eosnationftw',
-//   ref_block_num: 61025,
-//   stake_quantity: 1.8,
-//   stake_net_quantity: 0.9,
-//   stake_cpu_quantity: 0.9
+//   block_num: 6101090,
+//   stake_quantity: 2.8,
+//   stake_net_quantity: 0.4,
+//   stake_cpu_quantity: 2.4
 // }
 ```
 
@@ -142,7 +142,8 @@ Get Account Actions
     -   `options.names` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter by action names (eg: ["undelegatebw", "delegatebw"])
     -   `options.data` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>?** Filter by data entries (eg: [{"data.from": "eosio"}])
     -   `options.trx_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Transaction Id
-    -   `options.ref_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
+    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
+    -   `options.block_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Reference Block ID
     -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
     -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
     -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents

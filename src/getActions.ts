@@ -1,5 +1,14 @@
 import { MongoClient } from "mongodb";
 
+export interface Action {
+    account: string;
+    name: string;
+    data: any;
+    trx_id: string;
+    block_id: string;
+    block_num: number;
+}
+
 /**
  * Get Account Actions
  *
@@ -9,7 +18,8 @@ import { MongoClient } from "mongodb";
  * @param {Array<string>} [options.names] Filter by action names (eg: ["undelegatebw", "delegatebw"])
  * @param {Array<object>} [options.data] Filter by data entries (eg: [{"data.from": "eosio"}])
  * @param {string} [options.trx_id] Filter by exact Transaction Id
- * @param {number} [options.ref_block_num] Filter by exact Reference Block Number
+ * @param {number} [options.block_num] Filter by exact Reference Block Number
+ * @param {string} [options.block_id] Filter by exact Reference Block ID
  * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Skips number of documents
@@ -29,7 +39,8 @@ export function getActions(client: MongoClient, options: {
     names?: string[],
     data?: object[],
     trx_id?: string,
-    ref_block_num?: number,
+    block_num?: number,
+    block_id?: string,
     lte_block_num?: number,
     gte_block_num?: number,
     skip?: number,
@@ -86,7 +97,7 @@ export function getActions(client: MongoClient, options: {
             startWith: "$trx_id",
             connectFromField: "trx_id",
             connectToField: "trx_id",
-            as: "transaction",
+            as: "transactions",
         },
     });
 
@@ -98,18 +109,20 @@ export function getActions(client: MongoClient, options: {
             name: 1,
             data: 1,
             trx_id: 1,
-            ref_block_num: { $arrayElemAt: [ "$transaction.transaction_header.ref_block_num", 0 ] },
+            block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
+            block_num: { $arrayElemAt: [ "$transactions.block_num", 0 ] },
         },
     });
 
     // Filter by Reference Block Number
-    if (options.ref_block_num) { pipeline.push({$match: { ref_block_num: options.ref_block_num }}); }
-    if (options.lte_block_num) { pipeline.push({$match: { ref_block_num: {$lte: options.lte_block_num }}}); }
-    if (options.gte_block_num) { pipeline.push({$match: { ref_block_num: {$gte: options.gte_block_num }}}); }
+    if (options.block_num) { pipeline.push({$match: { block_num: options.block_num }}); }
+    if (options.block_id) { pipeline.push({$match: { block_id: options.block_id }}); }
+    if (options.lte_block_num) { pipeline.push({$match: { block_num: {$lte: options.lte_block_num }}}); }
+    if (options.gte_block_num) { pipeline.push({$match: { block_num: {$gte: options.gte_block_num }}}); }
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
     if (options.limit) { pipeline.push({$limit: options.limit }); }
 
-    return collection.aggregate(pipeline);
+    return collection.aggregate<Action>(pipeline);
 }

@@ -7,8 +7,8 @@ import { getActions } from "./getActions";
  * @param {MongoClient} client MongoDB Client
  * @param {string} name Account Name
  * @param {Object} [options={}] Optional Parameters
- * @param {number} [options.lte_block_num] Less-than or equal (<=) the Reference Block Number
- * @param {number} [options.gte_block_num] Greater-than or equal (>=) the Reference Block Number
+ * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
+ * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
  * @returns {Object} Account Details
  * @example
  * const name = "eosnationftw";
@@ -19,10 +19,10 @@ import { getActions } from "./getActions";
  * const result = await getAccount(client, name, options);
  * // {
  * //   name: 'eosnationftw',
- * //   ref_block_num: 61025,
- * //   stake_quantity: 1.8,
- * //   stake_net_quantity: 0.9,
- * //   stake_cpu_quantity: 0.9
+ * //   block_num: 6101090,
+ * //   stake_quantity: 2.8,
+ * //   stake_net_quantity: 0.4,
+ * //   stake_cpu_quantity: 2.4
  * // }
  */
 export async function getAccount(client: MongoClient, name: string, options: {
@@ -42,13 +42,13 @@ export async function getAccount(client: MongoClient, name: string, options: {
     if (!actions.length) { throw new Error("no account found"); }
 
     // Counters
-    let ref_block_num = 0;
+    let block_num = 0;
     let stake_quantity = 0;
     let stake_net_quantity = 0;
     let stake_cpu_quantity = 0;
 
     for (const action of actions) {
-        if (action.ref_block_num > ref_block_num) { ref_block_num = action.ref_block_num; }
+        if (action.block_num > block_num) { block_num = action.block_num; }
 
         switch (action.name) {
         case "delegatebw":
@@ -74,7 +74,7 @@ export async function getAccount(client: MongoClient, name: string, options: {
 
     return {
         name,
-        ref_block_num,
+        block_num,
         stake_quantity,
         stake_net_quantity,
         stake_cpu_quantity,
