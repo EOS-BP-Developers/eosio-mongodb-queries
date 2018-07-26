@@ -87,7 +87,7 @@ To allow actions to be decoded from the ABI, you must replay all blocks from the
 
 This is made with ♥ by:
 
-- [EOS Nation](https://eosnation.io) (`eosnationftw`)
+-   [EOS Nation](https://eosnation.io) (`eosnationftw`)
 
 > Voting on the EOSIO mainnet helps build more awesome tools for the EOS community.
 
@@ -113,24 +113,22 @@ Get Account Details
 -   `client` **MongoClient** MongoDB Client
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account Name
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
-    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
-    -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
+    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
 
 #### Examples
 
 ```javascript
 const name = "eosnationftw";
 const options = {
-  gte_block_num: 0,
-  lte_block_num: Infinity,
+  block_num: 6000000,
 };
 const result = await getAccount(client, name, options);
 // {
 //   name: 'eosnationftw',
-//   block_num: 6101090,
-//   stake_quantity: 2.8,
-//   stake_net_quantity: 0.4,
-//   stake_cpu_quantity: 2.4
+//   block_num: 2092984,
+//   stake_quantity: 1.8,
+//   stake_net_quantity: 0.9,
+//   stake_cpu_quantity: 0.9
 // }
 ```
 
@@ -168,4 +166,3 @@ console.log(await results.toArray());
 ```
 
 Returns **AggregationCursor** MongoDB Aggregation Cursor
-

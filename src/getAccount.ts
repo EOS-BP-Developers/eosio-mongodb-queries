@@ -12,16 +12,15 @@ import { getActions } from "./getActions";
  * @example
  * const name = "eosnationftw";
  * const options = {
- *   gte_block_num: 0,
- *   lte_block_num: Infinity,
+ *   block_num: 6000000,
  * };
  * const result = await getAccount(client, name, options);
  * // {
  * //   name: 'eosnationftw',
- * //   block_num: 6101090,
- * //   stake_quantity: 2.8,
- * //   stake_net_quantity: 0.4,
- * //   stake_cpu_quantity: 2.4
+ * //   block_num: 2092984,
+ * //   stake_quantity: 1.8,
+ * //   stake_net_quantity: 0.9,
+ * //   stake_cpu_quantity: 0.9
  * // }
  */
 export async function getAccount(client: MongoClient, name: string, options: {
