@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import { isNullOrUndefined } from "util";
 
 export interface Action {
     account: string;
@@ -116,14 +117,19 @@ export function getActions(client: MongoClient, options: {
     });
 
     // Filter by Reference Block Number
-    if (options.block_num) { pipeline.push({$match: { block_num: options.block_num }}); }
-    if (options.block_id) { pipeline.push({$match: { block_id: options.block_id }}); }
-    if (options.lte_block_num) { pipeline.push({$match: { block_num: {$lte: options.lte_block_num }}}); }
-    if (options.gte_block_num) { pipeline.push({$match: { block_num: {$gte: options.gte_block_num }}}); }
+    const {block_id, block_num, lte_block_num, gte_block_num} = options;
+
+    if (block_id) { pipeline.push({$match: { block_id }}); }
+    if (!isNullOrUndefined(block_num)) { pipeline.push({$match: { block_num }}); }
+
+    // Both greater & lesser Block Number
+    if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
+    if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
 
     // Support Pagination using Skip & Limit
-    if (options.skip) { pipeline.push({$skip: options.skip }); }
-    if (options.limit) { pipeline.push({$limit: options.limit }); }
+    const {skip, limit} = options;
+    if (skip) { pipeline.push({$skip: skip }); }
+    if (limit) { pipeline.push({$limit: limit }); }
 
     return collection.aggregate<Action>(pipeline);
 }
