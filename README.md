@@ -6,8 +6,6 @@
 
 Quickly and easily create complex MongoDB Queries for the EOSIO blockchain.
 
-> Vote for [EOS Nation](https://eosnation.io) (eosnationftw) to help build more awesome tools for the EOS community.
-
 ## Install
 
 **npm**
@@ -84,6 +82,14 @@ To allow actions to be decoded from the ABI, you must replay all blocks from the
 
 -   <https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/>
 -   <https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/>
+
+## Contributors
+
+This is made with ♥ by:
+
+- [EOS Nation](https://eosnation.io) (`eosnationftw`)
+
+> Voting on the EOSIO mainnet helps build more awesome tools for the EOS community.
 
 ## API
 
@@ -162,3 +168,4 @@ console.log(await results.toArray());
 ```
 
 Returns **AggregationCursor** MongoDB Aggregation Cursor
+
