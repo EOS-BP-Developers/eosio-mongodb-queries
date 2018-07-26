@@ -1,8 +1,8 @@
 # EOSIO MongoDB Queries
 
-[![Build Status](https://travis-ci.org/EOS-Nation/eosio-mongodb-queries.svg?branch=master)](https://travis-ci.org/EOS-Nation/eosio-mongodb-queries)
+[![Build Status](https://travis-ci.org/EOS-BP-Developers/eosio-mongodb-queries.svg?branch=master)](https://travis-ci.org/EOS-BP-Developers/eosio-mongodb-queries)
 [![npm version](https://badge.fury.io/js/eosio-mongodb-queries.svg)](https://badge.fury.io/js/eosio-mongodb-queries)
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/EOS-Nation/eosio-mongodb-queries/master/LICENSE)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/EOS-BP-Developers/eosio-mongodb-queries/master/LICENSE)
 
 Quickly and easily create complex MongoDB Queries for the EOSIO blockchain.
 
