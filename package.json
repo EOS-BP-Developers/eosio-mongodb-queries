@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EOS-Nation/eosio-mongodb-queries.git"
+    "url": "git+https://github.com/EOS-BP-Developers/eosio-mongodb-queries.git"
   },
   "keywords": [
     "eosio",
@@ -27,11 +27,14 @@
     "eos"
   ],
   "author": "Denis Carriere <denis@eosnation.io>",
+  "contributors": [
+    "Denis Carriere <denis@eosnation.io>"
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/EOS-Nation/eosio-mongodb-queries/issues"
+    "url": "https://github.com/EOS-BP-Developers/eosio-mongodb-queries/issues"
   },
-  "homepage": "https://github.com/EOS-Nation/eosio-mongodb-queries#readme",
+  "homepage": "https://github.com/EOS-BP-Developers/eosio-mongodb-queries#readme",
   "devDependencies": {
     "@types/mongodb": "*",
     "documentation": "*",
