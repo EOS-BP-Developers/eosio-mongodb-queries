@@ -25,6 +25,7 @@ export interface Action {
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Skips number of documents
  * @param {number} [options.limit] Limit the maximum amount of of actions returned
+ * @param {number} [options.sort=-1] Sort by ascending order (1) or descending order (-1).
  * @returns {AggregationCursor} MongoDB Aggregation Cursor
  * @example
  * const options = {
@@ -46,6 +47,7 @@ export function getActions(client: MongoClient, options: {
     gte_block_num?: number,
     skip?: number,
     limit?: number,
+    sort?: number,
 } = {}) {
     // Setup MongoDB collection
     const db = client.db("EOS");
@@ -125,6 +127,11 @@ export function getActions(client: MongoClient, options: {
     // Both greater & lesser Block Number
     if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
     if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
+
+    // Sort by ascending or decending
+    const sort = options.sort || -1;
+    // if (sort !== -1 && sort !== 1) { throw new Error("sort is invalid (must be either -1 or 1)"); }
+    pipeline.push({$sort: {block_num: sort}});
 
     // Support Pagination using Skip & Limit
     const {skip, limit} = options;

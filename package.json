@@ -1,6 +1,6 @@
 {
   "name": "eosio-mongodb-queries",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "EOSIO MongoDB Queries",
   "main": "index.js",
   "types": "index.d.ts",
@@ -36,8 +36,9 @@
   },
   "homepage": "https://github.com/EOS-BP-Developers/eosio-mongodb-queries#readme",
   "devDependencies": {
-    "@types/dotenv": "*",
+    "@types/bson": "*",
     "@types/mongodb": "*",
+    "@types/node": "*",
     "documentation": "*",
     "dotenv": "*",
     "mongodb": "*",

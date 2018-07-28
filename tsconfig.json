@@ -9,7 +9,13 @@
     "strict": true,                           /* Enable all strict type-checking options. */
 
     /* Module Resolution Options */
-    "esModuleInterop": true                   /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+    "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+
+    /* https://github.com/apollographql/graphql-subscriptions/issues/83 */
+    "lib": [
+      "es6",
+      "esnext.asynciterable"
+    ]
   },
   "files": [
     "index.ts"

@@ -12,7 +12,8 @@ import { MONGODB_URI } from "../config";
         gte_block_num: 0,
         lte_block_num: Infinity,
         skip: 0,
-        limit: 25,
+        limit: 2,
+        sort: 1,
     };
     try {
         const results = await getActions(client, options);
