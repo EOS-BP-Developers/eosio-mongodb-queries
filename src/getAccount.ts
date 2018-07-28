@@ -30,7 +30,7 @@ export async function getAccount(client: MongoClient, name: string, options: {
     const actions = await getActions(client, {
         accounts: ["eosio"],
         names: ["delegatebw", "undelegatebw"],
-        data: [{"data.from": name, "data.receiver": name}],
+        match: [{"data.from": name, "data.receiver": name}],
         lte_block_num: options.block_num,
     }).toArray();
 

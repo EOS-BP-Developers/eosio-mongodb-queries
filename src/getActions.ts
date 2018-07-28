@@ -17,7 +17,7 @@ export interface Action {
  * @param {Object} [options={}] Optional Parameters
  * @param {Array<string>} [options.accounts] Filter by account contracts (eg: ["eosio","eosio.token"])
  * @param {Array<string>} [options.names] Filter by action names (eg: ["undelegatebw", "delegatebw"])
- * @param {Array<object>} [options.data] Filter by data entries (eg: [{"data.from": "eosio"}])
+ * @param {Array<object>} [options.match] Match by entries (eg: [{"data.from": "eosio"}])
  * @param {string} [options.trx_id] Filter by exact Transaction Id
  * @param {number} [options.block_num] Filter by exact Reference Block Number
  * @param {string} [options.block_id] Filter by exact Reference Block ID
@@ -30,7 +30,7 @@ export interface Action {
  * const options = {
  *     accounts: ["eosio"],
  *     names: ["delegatebw", "undelegatebw"],
- *     data: [{from: "eosnationftw"}, {receiver: "eosnationftw"}],
+ *     match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
  * };
  * const results = await getActions(client, options);
  * console.log(await results.toArray());
@@ -38,7 +38,7 @@ export interface Action {
 export function getActions(client: MongoClient, options: {
     accounts?: string[],
     names?: string[],
-    data?: object[],
+    match?: object[],
     trx_id?: string,
     block_num?: number,
     block_id?: string,
@@ -81,12 +81,12 @@ export function getActions(client: MongoClient, options: {
         });
     }
 
-    // Filter by data entry
-    // eg: [{from: "eosio"}]
-    if (options.data && options.data.length) {
+    // Match by data entries
+    // eg: [{"data.from": "eosio"}]
+    if (options.match && options.match.length) {
         pipeline.push({
             $match: {
-                $or: options.data,
+                $or: options.match,
             },
         });
     }

@@ -1,8 +1,9 @@
 import { MongoClient } from "mongodb";
 import { getAccount } from "..";
+import { MONGODB_URI } from "../config";
 
 (async () => {
-    const client = await MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true });
+    const client = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
     const options = {
         block_num: 6000000,
     };
