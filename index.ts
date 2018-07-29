@@ -1,2 +1,3 @@
-export * from "./src/getAccount";
-export * from "./src/getActions";
+export { getActions } from "./src/getActions";
+export { getBlocks } from "./src/getBlocks";
+export { getAccount } from "./src/getAccount";

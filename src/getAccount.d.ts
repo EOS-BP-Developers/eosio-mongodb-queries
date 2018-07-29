@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 /**
  * Get Account Details
+ * !!WORK IN PROGRESS!!
  *
  * @param {MongoClient} client MongoDB Client
  * @param {string} name Account Name

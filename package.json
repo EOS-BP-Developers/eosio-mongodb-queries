@@ -1,6 +1,6 @@
 {
   "name": "eosio-mongodb-queries",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "EOSIO MongoDB Queries",
   "main": "index.js",
   "types": "index.d.ts",
@@ -26,7 +26,7 @@
     "mongo",
     "eos"
   ],
-  "author": "Denis Carriere <denis@eosnation.io>",
+  "author": "EOS BP Developers",
   "contributors": [
     "Denis Carriere <denis@eosnation.io>"
   ],

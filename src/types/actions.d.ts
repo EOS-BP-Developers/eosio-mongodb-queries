@@ -5,6 +5,7 @@
 //   "Set quicktype target language"
 
 export interface Actions {
+    _id:           string;
     block_num:     number;
     block_id:      string;
     action_num:    number;

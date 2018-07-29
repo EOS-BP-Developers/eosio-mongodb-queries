@@ -97,46 +97,19 @@ This is made with ♥ by:
 
 #### Table of Contents
 
--   [getAccount](#getaccount)
+-   [getActions](#getactions)
     -   [Parameters](#parameters)
     -   [Examples](#examples)
--   [getActions](#getactions)
+-   [getBlocks](#getblocks)
     -   [Parameters](#parameters-1)
     -   [Examples](#examples-1)
-
-### getAccount
-
-Get Account Details
-
-#### Parameters
-
--   `client` **MongoClient** MongoDB Client
--   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account Name
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
-    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
-
-#### Examples
-
-```javascript
-const name = "eosnationftw";
-const options = {
-  block_num: 6000000,
-};
-const result = await getAccount(client, name, options);
-// {
-//   name: 'eosnationftw',
-//   block_num: 2092984,
-//   stake_quantity: 1.8,
-//   stake_net_quantity: 0.9,
-//   stake_cpu_quantity: 0.9
-// }
-```
-
-Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Account Details
+-   [getAccount](#getaccount)
+    -   [Parameters](#parameters-2)
+    -   [Examples](#examples-2)
 
 ### getActions
 
-Get Account Actions
+EOSIO MongoDB Actions
 
 #### Parameters
 
@@ -168,3 +141,64 @@ console.log(await results.toArray());
 ```
 
 Returns **AggregationCursor&lt;Actions>** MongoDB Aggregation Cursor
+
+### getBlocks
+
+EOSIO MongoDB Blocks
+
+#### Parameters
+
+-   `client` **MongoClient** MongoDB Client
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+    -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries (eg: {"block.producer": "eosio"})
+    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
+    -   `options.block_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Reference Block ID
+    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
+    -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
+    -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
+    -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Limit the maximum amount of of actions returned
+    -   `options.sort` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
+
+#### Examples
+
+```javascript
+const options = {
+    match: {"block.producer": "eosnationftw"},
+    sort: {block_num: -1}
+};
+const results = await getBlocks(client, options);
+console.log(await results.toArray());
+```
+
+Returns **AggregationCursor&lt;Blocks>** MongoDB Aggregation Cursor
+
+### getAccount
+
+Get Account Details
+!!WORK IN PROGRESS!!
+
+#### Parameters
+
+-   `client` **MongoClient** MongoDB Client
+-   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account Name
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
+
+#### Examples
+
+```javascript
+const name = "eosnationftw";
+const options = {
+  block_num: 6000000,
+};
+const result = await getAccount(client, name, options);
+// {
+//   name: 'eosnationftw',
+//   block_num: 2092984,
+//   stake_quantity: 1.8,
+//   stake_net_quantity: 0.9,
+//   stake_cpu_quantity: 0.9
+// }
+```
+
+Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Account Details
