@@ -144,7 +144,7 @@ Get Account Actions
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
     -   `options.accounts` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter by account contracts (eg: ["eosio","eosio.token"])
     -   `options.names` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter by action names (eg: ["undelegatebw", "delegatebw"])
-    -   `options.match` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>?** Match by entries (eg: [{"data.from": "eosio"}])
+    -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries (eg: {"data.from": "eosio"})
     -   `options.trx_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Transaction Id
     -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
     -   `options.block_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Reference Block ID
@@ -152,7 +152,7 @@ Get Account Actions
     -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
     -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
     -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Limit the maximum amount of of actions returned
-    -   `options.sort` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
+    -   `options.sort` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
 
 #### Examples
 
@@ -160,7 +160,7 @@ Get Account Actions
 const options = {
     accounts: ["eosio"],
     names: ["delegatebw", "undelegatebw"],
-    match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
+    match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
     sort: {block_num: -1}
 };
 const results = await getActions(client, options);

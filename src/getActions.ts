@@ -9,7 +9,7 @@ import { Actions } from "./types/actions";
  * @param {Object} [options={}] Optional Parameters
  * @param {Array<string>} [options.accounts] Filter by account contracts (eg: ["eosio","eosio.token"])
  * @param {Array<string>} [options.names] Filter by action names (eg: ["undelegatebw", "delegatebw"])
- * @param {Array<object>} [options.match] Match by entries (eg: [{"data.from": "eosio"}])
+ * @param {object} [options.match] Match by entries (eg: {"data.from": "eosio"})
  * @param {string} [options.trx_id] Filter by exact Transaction Id
  * @param {number} [options.block_num] Filter by exact Reference Block Number
  * @param {string} [options.block_id] Filter by exact Reference Block ID
@@ -17,13 +17,13 @@ import { Actions } from "./types/actions";
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Skips number of documents
  * @param {number} [options.limit] Limit the maximum amount of of actions returned
- * @param {number} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
+ * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
  * @returns {AggregationCursor<Actions>} MongoDB Aggregation Cursor
  * @example
  * const options = {
  *     accounts: ["eosio"],
  *     names: ["delegatebw", "undelegatebw"],
- *     match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
+ *     match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
  *     sort: {block_num: -1}
  * };
  * const results = await getActions(client, options);
@@ -32,7 +32,7 @@ import { Actions } from "./types/actions";
 export function getActions(client: MongoClient, options: {
     accounts?: string[],
     names?: string[],
-    match?: object[],
+    match?: object,
     trx_id?: string,
     block_num?: number,
     block_id?: string,
@@ -40,7 +40,7 @@ export function getActions(client: MongoClient, options: {
     gte_block_num?: number,
     skip?: number,
     limit?: number,
-    sort?: number,
+    sort?: object,
 } = {}) {
     // Setup MongoDB collection
     const db = client.db("EOS");
@@ -77,14 +77,8 @@ export function getActions(client: MongoClient, options: {
     }
 
     // Match by data entries
-    // eg: [{"data.from": "eosio"}]
-    if (options.match && options.match.length) {
-        pipeline.push({
-            $match: {
-                $or: options.match,
-            },
-        });
-    }
+    // options.match //=> {"data.from": "eosio"}
+    if (options.match) { pipeline.push({$match: options.match}); }
 
     // Get Reference Block Number from Transaction Id
     pipeline.push({
@@ -119,8 +113,12 @@ export function getActions(client: MongoClient, options: {
     if (!isNullOrUndefined(block_num)) { pipeline.push({$match: { block_num }}); }
 
     // Both greater & lesser Block Number
-    if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
-    if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
+    if (!isNullOrUndefined(lte_block_num) && !isNullOrUndefined(gte_block_num)) {
+        pipeline.push({$match: { block_num: {$lte: lte_block_num, $gte: gte_block_num }}});
+    } else {
+        if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
+        if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
+    }
 
     // Sort by ascending or decending based on attribute
     // options.sort //=> {block_num: -1}
