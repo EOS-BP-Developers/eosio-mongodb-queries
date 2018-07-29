@@ -1,14 +1,6 @@
 import { MongoClient } from "mongodb";
 import { isNullOrUndefined } from "util";
-
-export interface Action {
-    account: string;
-    name: string;
-    data: any;
-    trx_id: string;
-    block_id: string;
-    block_num: number;
-}
+import { Actions } from "./types/actions";
 
 /**
  * Get Account Actions
@@ -25,13 +17,14 @@ export interface Action {
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Skips number of documents
  * @param {number} [options.limit] Limit the maximum amount of of actions returned
- * @param {number} [options.sort=-1] Sort by ascending order (1) or descending order (-1).
- * @returns {AggregationCursor} MongoDB Aggregation Cursor
+ * @param {number} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
+ * @returns {AggregationCursor<Actions>} MongoDB Aggregation Cursor
  * @example
  * const options = {
  *     accounts: ["eosio"],
  *     names: ["delegatebw", "undelegatebw"],
  *     match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
+ *     sort: {block_num: -1}
  * };
  * const results = await getActions(client, options);
  * console.log(await results.toArray());
@@ -104,13 +97,14 @@ export function getActions(client: MongoClient, options: {
         },
     });
 
-    // Filter only required fields
+    // Add block_num + block_id and other fields
     pipeline.push({
         $project: {
             _id: 0,
-            trx_id: 1,
-            block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
             block_num: { $arrayElemAt: [ "$transactions.block_num", 0 ] },
+            block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
+            trx_id: 1,
+            cfa: 1,
             account: 1,
             name: 1,
             authorization: 1,
@@ -128,15 +122,14 @@ export function getActions(client: MongoClient, options: {
     if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
     if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
 
-    // Sort by ascending or decending
-    const sort = options.sort || -1;
-    // if (sort !== -1 && sort !== 1) { throw new Error("sort is invalid (must be either -1 or 1)"); }
-    pipeline.push({$sort: {block_num: sort}});
+    // Sort by ascending or decending based on attribute
+    // options.sort //=> {block_num: -1}
+    // options.sort //=> {"data.from": -1}
+    if (options.sort) { pipeline.push({$sort: options.sort}); }
 
     // Support Pagination using Skip & Limit
-    const {skip, limit} = options;
-    if (skip) { pipeline.push({$skip: skip }); }
-    if (limit) { pipeline.push({$limit: limit }); }
+    if (options.skip) { pipeline.push({$skip: options.skip }); }
+    if (options.limit) { pipeline.push({$limit: options.limit }); }
 
-    return collection.aggregate<Action>(pipeline);
+    return collection.aggregate<Actions>(pipeline);
 }

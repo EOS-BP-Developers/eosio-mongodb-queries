@@ -1,12 +1,5 @@
 import { MongoClient } from "mongodb";
-export interface Action {
-    account: string;
-    name: string;
-    data: any;
-    trx_id: string;
-    block_id: string;
-    block_num: number;
-}
+import { Actions } from "./types/actions";
 /**
  * Get Account Actions
  *
@@ -22,13 +15,14 @@ export interface Action {
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
  * @param {number} [options.skip] Skips number of documents
  * @param {number} [options.limit] Limit the maximum amount of of actions returned
- * @param {number} [options.sort=-1] Sort by ascending order (1) or descending order (-1).
- * @returns {AggregationCursor} MongoDB Aggregation Cursor
+ * @param {number} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
+ * @returns {AggregationCursor<Actions>} MongoDB Aggregation Cursor
  * @example
  * const options = {
  *     accounts: ["eosio"],
  *     names: ["delegatebw", "undelegatebw"],
  *     match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
+ *     sort: {block_num: -1}
  * };
  * const results = await getActions(client, options);
  * console.log(await results.toArray());
@@ -45,4 +39,4 @@ export declare function getActions(client: MongoClient, options?: {
     skip?: number;
     limit?: number;
     sort?: number;
-}): import("mongodb").AggregationCursor<Action>;
+}): import("mongodb").AggregationCursor<Actions>;

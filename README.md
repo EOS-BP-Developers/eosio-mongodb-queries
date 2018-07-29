@@ -152,7 +152,7 @@ Get Account Actions
     -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
     -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
     -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Limit the maximum amount of of actions returned
-    -   `options.sort` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Sort by ascending order (1) or descending order (-1). (optional, default `-1`)
+    -   `options.sort` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
 
 #### Examples
 
@@ -161,9 +161,10 @@ const options = {
     accounts: ["eosio"],
     names: ["delegatebw", "undelegatebw"],
     match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
+    sort: {block_num: -1}
 };
 const results = await getActions(client, options);
 console.log(await results.toArray());
 ```
 
-Returns **AggregationCursor** MongoDB Aggregation Cursor
+Returns **AggregationCursor&lt;Actions>** MongoDB Aggregation Cursor

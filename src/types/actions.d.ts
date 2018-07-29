@@ -5,23 +5,18 @@
 //   "Set quicktype target language"
 
 export interface Actions {
-    _id:           string;
+    block_num:     number;
+    block_id:      string;
     action_num:    number;
     trx_id:        string;
     cfa:           boolean;
     account:       string;
     name:          string;
     authorization: Authorization[];
-    data:          Data;
+    data:          any;
 }
 
 export interface Authorization {
     actor:      string;
     permission: string;
-}
-
-export interface Data {
-    payer:    string;
-    receiver: string;
-    bytes:    number;
 }
