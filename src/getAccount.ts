@@ -33,6 +33,7 @@ export async function getAccount(client: MongoClient, name: string, options: {
         names: ["delegatebw", "undelegatebw"],
         match: {"data.from": name, "data.receiver": name},
         lte_block_num: options.block_num,
+        limit: Infinity,
     }).toArray();
 
     // Assert
