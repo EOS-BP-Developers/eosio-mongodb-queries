@@ -130,7 +130,7 @@ export function getActions(client: MongoClient, options: {
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
-    if (options.limit) { pipeline.push({$limit: options.limit }); }
+    if (options.limit !== Infinity && options.limit) { pipeline.push({$limit: options.limit }); }
 
     return collection.aggregate<Actions>(pipeline);
 }
