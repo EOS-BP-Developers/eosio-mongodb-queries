@@ -37,6 +37,7 @@
   "homepage": "https://github.com/EOS-BP-Developers/eosio-mongodb-queries#readme",
   "devDependencies": {
     "@types/bson": "*",
+    "@types/dotenv": "*",
     "@types/mongodb": "*",
     "@types/node": "*",
     "documentation": "*",

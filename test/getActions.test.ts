@@ -8,12 +8,12 @@ import { MONGODB_URI } from "../config";
     const options = {
         accounts: ["eosio"],
         names: ["delegatebw", "undelegatebw"],
-        match: [{"data.from": "eosnationftw"}, {"data.receiver": "eosnationftw"}],
+        match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
         gte_block_num: 0,
         lte_block_num: Infinity,
         skip: 0,
         limit: 2,
-        sort: 1,
+        sort: {block_num: 1},
     };
     try {
         const results = await getActions(client, options);
