@@ -103,9 +103,12 @@ This is made with ♥ by:
 -   [getBlocks](#getblocks)
     -   [Parameters](#parameters-1)
     -   [Examples](#examples-1)
--   [getAccount](#getaccount)
+-   [getAccountControls](#getaccountcontrols)
     -   [Parameters](#parameters-2)
     -   [Examples](#examples-2)
+-   [getAccount](#getaccount)
+    -   [Parameters](#parameters-3)
+    -   [Examples](#examples-3)
 
 ### getActions
 
@@ -172,17 +175,41 @@ console.log(await results.toArray());
 
 Returns **AggregationCursor&lt;Blocks>** MongoDB Aggregation Cursor
 
+### getAccountControls
+
+EOSIO MongoDB Account Controls
+
+#### Parameters
+
+-   `client` **MongoClient** MongoDB Client
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+    -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Limit the maximum amount of of actions returned (optional, default `25`)
+    -   `options.sort` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Sort by ascending order (1) or descending order (-1) (eg: {controlled_account: -1}) (optional, default `{_id:-1}`)
+    -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
+    -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries (eg: {controlled_account: "eosio.saving"})
+
+#### Examples
+
+```javascript
+const options = {
+    match: {controlled_account: "eosio.saving"},
+};
+const results = await getAccounControls(client, options);
+console.log(await results.toArray());
+```
+
+Returns **AggregationCursor&lt;AccountControls>** MongoDB Aggregation Cursor
+
 ### getAccount
 
 Get Account Details
-!!WORK IN PROGRESS!!
 
 #### Parameters
 
 -   `client` **MongoClient** MongoDB Client
 -   `name` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Account Name
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
-    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
+    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
 
 #### Examples
 
