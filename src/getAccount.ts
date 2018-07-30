@@ -3,12 +3,11 @@ import { getActions } from "./getActions";
 
 /**
  * Get Account Details
- * !!WORK IN PROGRESS!!
  *
  * @param {MongoClient} client MongoDB Client
  * @param {string} name Account Name
  * @param {Object} [options={}] Optional Parameters
- * @param {number} [options.block_num] Filter by Less-than or equal (<=) the Reference Block Number
+ * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
  * @returns {Object} Account Details
  * @example
  * const name = "eosnationftw";
@@ -25,14 +24,14 @@ import { getActions } from "./getActions";
  * // }
  */
 export async function getAccount(client: MongoClient, name: string, options: {
-    block_num?: number,
+    lte_block_num?: number,
 } = {}) {
     // Get Actions
     const actions = await getActions(client, {
         accounts: ["eosio"],
         names: ["delegatebw", "undelegatebw"],
-        match: {"data.from": name, "data.receiver": name},
-        lte_block_num: options.block_num,
+        match: {$or: [{"data.from": name}, {"data.receiver": name}]},
+        lte_block_num: options.lte_block_num,
         limit: Infinity,
     }).toArray();
 

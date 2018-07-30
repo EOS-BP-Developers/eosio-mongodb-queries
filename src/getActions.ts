@@ -46,11 +46,12 @@ export function getActions(client: MongoClient, options: {
     const db = client.db("EOS");
     const collection = db.collection("actions");
 
+    // Default optional paramters
+    if (isNullOrUndefined(options.limit)) { options.limit = 25; }
+    options.sort = options.sort || {_id: -1};
+
     // MongoDB Pipeline
     const pipeline: any = [];
-
-    // Default optional paramters
-    options.limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
 
     // Filter by Transaction ID
     if (options.trx_id) { pipeline.push({$match: { trx_id: options.trx_id }}); }

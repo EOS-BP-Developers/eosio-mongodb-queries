@@ -5,10 +5,10 @@ import { MONGODB_URI } from "../config";
 (async () => {
     const client = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
     const options = {
-        block_num: 6000000,
+        lte_block_num: 6000000,
     };
     try {
-        const results = await getAccount(client, "eosnationftw", options);
+        const results = await getAccount(client, "chainceout11", options);
         console.log(results);
     } catch (e) {
         console.log(e);

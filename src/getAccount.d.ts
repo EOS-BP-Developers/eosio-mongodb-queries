@@ -1,12 +1,11 @@
 import { MongoClient } from "mongodb";
 /**
  * Get Account Details
- * !!WORK IN PROGRESS!!
  *
  * @param {MongoClient} client MongoDB Client
  * @param {string} name Account Name
  * @param {Object} [options={}] Optional Parameters
- * @param {number} [options.block_num] Filter by Less-than or equal (<=) the Reference Block Number
+ * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
  * @returns {Object} Account Details
  * @example
  * const name = "eosnationftw";
@@ -23,7 +22,7 @@ import { MongoClient } from "mongodb";
  * // }
  */
 export declare function getAccount(client: MongoClient, name: string, options?: {
-    block_num?: number;
+    lte_block_num?: number;
 }): Promise<{
     name: string;
     block_num: number;
