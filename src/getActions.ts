@@ -117,6 +117,7 @@ export function getActions(client: MongoClient, options: {
             data: 1,
             // join transactions
             irreversible: { $arrayElemAt: [ "$transactions.irreversible", 0 ] },
+            transaction_header: { $arrayElemAt: [ "$transactions.transaction_header", 0 ] },
             signing_keys: { $arrayElemAt: [ "$transactions.signing_keys", 0 ] },
             signatures: { $arrayElemAt: [ "$transactions.signatures", 0 ] },
             block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
