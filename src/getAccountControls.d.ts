@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { AggregationCursor, MongoClient } from "mongodb";
 import { AccountControls } from "./types/account_controls";
 /**
  * EOSIO MongoDB Account Controls
@@ -22,4 +22,4 @@ export declare function getAccountControls(client: MongoClient, options?: {
     skip?: number;
     limit?: number;
     sort?: object;
-}): import("mongodb").AggregationCursor<AccountControls>;
+}): AggregationCursor<AccountControls>;

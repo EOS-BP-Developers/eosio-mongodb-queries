@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { AggregationCursor, MongoClient } from "mongodb";
 import { Blocks } from "./types/blocks";
 /**
  * EOSIO MongoDB Blocks
@@ -31,4 +31,4 @@ export declare function getBlocks(client: MongoClient, options?: {
     skip?: number;
     limit?: number;
     sort?: object;
-}): import("mongodb").AggregationCursor<Blocks>;
+}): AggregationCursor<Blocks>;

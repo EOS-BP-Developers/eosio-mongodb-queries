@@ -1,4 +1,5 @@
 import { MongoClient } from "mongodb";
+import { Actions } from "./types/actions";
 /**
  * Get Account Details
  *
@@ -29,4 +30,5 @@ export declare function getAccount(client: MongoClient, name: string, options?: 
     stake_quantity: number;
     stake_net_quantity: number;
     stake_cpu_quantity: number;
+    actions: Actions[];
 }>;

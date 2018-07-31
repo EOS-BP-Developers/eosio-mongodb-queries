@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { AggregationCursor, MongoClient } from "mongodb";
 import { isNullOrUndefined } from "util";
 import { Actions } from "./types/actions";
 
@@ -7,12 +7,13 @@ import { Actions } from "./types/actions";
  *
  * @param {MongoClient} client MongoDB Client
  * @param {Object} [options={}] Optional Parameters
- * @param {Array<string>} [options.accounts] Filter by account contracts (eg: ["eosio","eosio.token"])
- * @param {Array<string>} [options.names] Filter by action names (eg: ["undelegatebw", "delegatebw"])
+ * @param {string|Array<string>} [options.account] Filter by account contracts (eg: ["eosio","eosio.token"])
+ * @param {string|Array<string>} [options.name] Filter by action names (eg: ["undelegatebw", "delegatebw"])
  * @param {number} [options.limit=25] Limit the maximum amount of of actions returned
+ * @param {boolean} [options.irreversible=true] Irreversible transaction (eg: true/false)
  * @param {number} [options.skip] Skips number of documents
  * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
- * @param {object} [options.match] Match by entries (eg: {"data.from": "eosio"})
+ * @param {object} [options.match] Match by entries using MongoDB's $match (eg: {"data.from": "eosio"})
  * @param {string} [options.trx_id] Filter by exact Transaction Id
  * @param {number} [options.block_num] Filter by exact Reference Block Number
  * @param {string} [options.block_id] Filter by exact Reference Block ID
@@ -21,34 +22,40 @@ import { Actions } from "./types/actions";
  * @returns {AggregationCursor<Actions>} MongoDB Aggregation Cursor
  * @example
  * const options = {
- *     accounts: ["eosio"],
- *     names: ["delegatebw", "undelegatebw"],
+ *     account: "eosio",
+ *     name: ["delegatebw", "undelegatebw"],
  *     match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
+ *     irreversible: true,
  *     sort: {block_num: -1}
  * };
  * const results = await getActions(client, options);
  * console.log(await results.toArray());
  */
 export function getActions(client: MongoClient, options: {
-    accounts?: string[],
-    names?: string[],
+    account?: string|string[],
+    name?: string|string[],
     match?: object,
     trx_id?: string,
     block_num?: number,
     block_id?: string,
     lte_block_num?: number,
     gte_block_num?: number,
+    irreversible?: boolean,
     skip?: number,
     limit?: number,
     sort?: object,
-} = {}) {
+} = {}): AggregationCursor<Actions> {
     // Setup MongoDB collection
     const db = client.db("EOS");
     const collection = db.collection("actions");
 
     // Default optional paramters
     if (isNullOrUndefined(options.limit)) { options.limit = 25; }
-    options.sort = options.sort || {_id: -1};
+    if (isNullOrUndefined(options.irreversible)) { options.irreversible = true; }
+
+    // Convert (string|string[]) => string[]
+    const names: string[] = Array.isArray(options.name) ? options.name : options.name ? [options.name] : [];
+    const accounts: string[] = Array.isArray(options.account) ? options.account : options.account ? [options.account] : [];
 
     // MongoDB Pipeline
     const pipeline: any = [];
@@ -58,10 +65,10 @@ export function getActions(client: MongoClient, options: {
 
     // Filter account contracts
     // eg: ["eosio", "eosio.token"]
-    if (options.accounts && options.accounts.length) {
+    if (accounts.length) {
         pipeline.push({
             $match: {
-                $or: options.accounts.map((account) => {
+                $or: accounts.map((account) => {
                     return { account };
                 }),
             },
@@ -70,10 +77,10 @@ export function getActions(client: MongoClient, options: {
 
     // Filter action names
     // eg: ["delegatebw", "undelegatebw"]
-    if (options.names && options.names.length) {
+    if (names.length) {
         pipeline.push({
             $match: {
-                $or: options.names.map((name) => {
+                $or: names.map((name) => {
                     return { name };
                 }),
             },
@@ -98,21 +105,28 @@ export function getActions(client: MongoClient, options: {
     // Add block_num + block_id and other fields
     pipeline.push({
         $project: {
+            // actions
             _id: 1,
-            block_num: { $arrayElemAt: [ "$transactions.block_num", 0 ] },
-            block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
+            action_num: 1,
             trx_id: 1,
             cfa: 1,
             account: 1,
             name: 1,
             authorization: 1,
             data: 1,
+            // join transactions
+            irreversible: { $arrayElemAt: [ "$transactions.irreversible", 0 ] },
+            signing_keys: { $arrayElemAt: [ "$transactions.signing_keys", 0 ] },
+            signatures: { $arrayElemAt: [ "$transactions.signatures", 0 ] },
+            block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
+            block_num: { $arrayElemAt: [ "$transactions.block_num", 0 ] },
         },
     });
 
     // Filter by Reference Block Number
-    const {block_id, block_num, lte_block_num, gte_block_num} = options;
+    const {block_id, block_num, lte_block_num, gte_block_num, irreversible} = options;
 
+    if (irreversible) { pipeline.push({$match: { irreversible }}); }
     if (block_id) { pipeline.push({$match: { block_id }}); }
     if (!isNullOrUndefined(block_num)) { pipeline.push({$match: { block_num }}); }
 

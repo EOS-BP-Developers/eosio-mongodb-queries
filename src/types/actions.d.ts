@@ -6,15 +6,19 @@
 
 export interface Actions {
     _id:           string;
-    block_num:     number;
-    block_id:      string;
     action_num:    number;
     trx_id:        string;
     cfa:           boolean;
     account:       string;
     name:          string;
     authorization: Authorization[];
-    data:          any;
+    data:          any; // JSON
+    // $graphLookup => transactions
+    irreversible:  boolean;
+    signing_keys:  any; // JSON
+    signatures:    any; // JSON
+    block_num:     number;
+    block_id:      string;
 }
 
 export interface Authorization {

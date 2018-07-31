@@ -1,18 +1,11 @@
-import { MongoClient } from "mongodb";
 import { getBlocks } from "../";
-import { MONGODB_URI } from "../config";
+import { connect } from "../config";
 
 (async () => {
-    const client = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
-
-    const options = {
+    const client = await connect();
+    const results = await getBlocks(client, {
         match: {"block.producer": "eosnationftw"},
-    };
-    try {
-        const results = await getBlocks(client, options);
-        console.log(await results.toArray());
-    } catch (e) {
-        console.log(e);
-    }
+    });
+    console.log(await results.toArray());
     client.close();
 })();

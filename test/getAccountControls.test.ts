@@ -1,19 +1,11 @@
-import { MongoClient } from "mongodb";
 import { getAccountControls } from "../";
-import { MONGODB_URI } from "../config";
+import { connect } from "../config";
 
 (async () => {
-    const client = await MongoClient.connect(MONGODB_URI, { useNewUrlParser: true });
-
-    const options = {
-        sort: {_id: -1},
-        // match: {controlled_account: "eosio.saving"},
-    };
-    try {
-        const results = await getAccountControls(client, options);
-        console.log(await results.toArray());
-    } catch (e) {
-        console.log(e);
-    }
+    const client = await connect();
+    const results = await getAccountControls(client, {
+        match: {controlled_account: "eosio.saving"},
+    });
+    console.log(await results.toArray());
     client.close();
 })();

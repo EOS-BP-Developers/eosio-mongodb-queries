@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { AggregationCursor, MongoClient } from "mongodb";
 import { isNullOrUndefined } from "util";
 import { AccountControls } from "./types/account_controls";
 
@@ -24,7 +24,7 @@ export function getAccountControls(client: MongoClient, options: {
     skip?: number,
     limit?: number,
     sort?: object,
-} = {}) {
+} = {}): AggregationCursor<AccountControls> {
     // Setup MongoDB collection
     const db = client.db("EOS");
     const collection = db.collection("account_controls");

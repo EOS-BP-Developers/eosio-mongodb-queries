@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { AggregationCursor, MongoClient } from "mongodb";
 import { isNullOrUndefined } from "util";
 import { Blocks } from "./types/blocks";
 
@@ -33,7 +33,7 @@ export function getBlocks(client: MongoClient, options: {
     skip?: number,
     limit?: number,
     sort?: object,
-} = {}) {
+} = {}): AggregationCursor<Blocks> {
     // Setup MongoDB collection
     const db = client.db("EOS");
     const collection = db.collection("blocks");
