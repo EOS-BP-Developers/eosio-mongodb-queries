@@ -8,7 +8,7 @@ import { AccountControls } from "./types/account_controls";
  * @param {MongoClient} client MongoDB Client
  * @param {Object} [options={}] Optional Parameters
  * @param {number} [options.limit=25] Limit the maximum amount of of actions returned
- * @param {object} [options.sort={_id: -1}] Sort by ascending order (1) or descending order (-1) (eg: {controlled_account: -1})
+ * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {controlled_account: -1})
  * @param {number} [options.skip] Skips number of documents
  * @param {object} [options.match] Match by entries (eg: {controlled_account: "eosio.saving"})
  * @returns {AggregationCursor<AccountControls>} MongoDB Aggregation Cursor
@@ -20,9 +20,9 @@ import { AccountControls } from "./types/account_controls";
  * console.log(await results.toArray());
  */
 export function getAccountControls(client: MongoClient, options: {
+    limit?: number,
     match?: object,
     skip?: number,
-    limit?: number,
     sort?: object,
 } = {}): AggregationCursor<AccountControls> {
     // Setup MongoDB collection
@@ -30,8 +30,7 @@ export function getAccountControls(client: MongoClient, options: {
     const collection = db.collection("account_controls");
 
     // Default optional paramters
-    if (isNullOrUndefined(options.limit)) { options.limit = 25; }
-    options.sort = options.sort || {_id: -1};
+    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
 
     // MongoDB Pipeline
     const pipeline: any = [];
@@ -44,7 +43,7 @@ export function getAccountControls(client: MongoClient, options: {
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
-    if (options.limit) { pipeline.push({$limit: options.limit }); }
+    if (limit) { pipeline.push({$limit: limit }); }
 
     return collection.aggregate<AccountControls>(pipeline);
 }

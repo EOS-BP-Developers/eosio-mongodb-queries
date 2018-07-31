@@ -42,7 +42,7 @@ export function getBlocks(client: MongoClient, options: {
     const pipeline: any = [];
 
     // Default optional paramters
-    options.limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
+    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
 
     // Match by data entries
     // options.match //=> {"data.from": "eosio"}
@@ -69,7 +69,7 @@ export function getBlocks(client: MongoClient, options: {
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
-    if (options.limit) { pipeline.push({$limit: options.limit }); }
+    if (limit) { pipeline.push({$limit: limit }); }
 
     return collection.aggregate<Blocks>(pipeline);
 }

@@ -50,7 +50,7 @@ export function getActions(client: MongoClient, options: {
     const collection = db.collection("actions");
 
     // Default optional paramters
-    if (isNullOrUndefined(options.limit)) { options.limit = 25; }
+    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
 
     // Convert (string|string[]) => string[]
     const names: string[] = Array.isArray(options.name) ? options.name : options.name ? [options.name] : [];
@@ -147,7 +147,7 @@ export function getActions(client: MongoClient, options: {
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
-    if (options.limit !== Infinity && options.limit) { pipeline.push({$limit: options.limit }); }
+    if (limit !== Infinity && limit) { pipeline.push({$limit: limit }); }
 
     return collection.aggregate<Actions>(pipeline);
 }

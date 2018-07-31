@@ -1,5 +1,5 @@
 import { getAccountControls } from "../";
-import { connect } from "../config";
+import { connect } from "./mongodb";
 
 (async () => {
     const client = await connect();

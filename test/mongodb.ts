@@ -1,11 +1,11 @@
 import * as dotenv from "dotenv";
 import { MongoClient } from "mongodb";
+import * as path from "path";
 
 // Parse .env
-dotenv.config();
+dotenv.config({path: path.join(__dirname, "..", ".env")});
 
 export const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017";
-export const EOSIO_MONGODB_QUERIES_LIMIT = process.env.EOSIO_MONGODB_QUERIES_LIMIT || 25;
 
 /**
  * Connect to MongoDB

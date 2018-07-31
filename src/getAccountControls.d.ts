@@ -6,7 +6,7 @@ import { AccountControls } from "./types/account_controls";
  * @param {MongoClient} client MongoDB Client
  * @param {Object} [options={}] Optional Parameters
  * @param {number} [options.limit=25] Limit the maximum amount of of actions returned
- * @param {object} [options.sort={_id: -1}] Sort by ascending order (1) or descending order (-1) (eg: {controlled_account: -1})
+ * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {controlled_account: -1})
  * @param {number} [options.skip] Skips number of documents
  * @param {object} [options.match] Match by entries (eg: {controlled_account: "eosio.saving"})
  * @returns {AggregationCursor<AccountControls>} MongoDB Aggregation Cursor
@@ -18,8 +18,8 @@ import { AccountControls } from "./types/account_controls";
  * console.log(await results.toArray());
  */
 export declare function getAccountControls(client: MongoClient, options?: {
+    limit?: number;
     match?: object;
     skip?: number;
-    limit?: number;
     sort?: object;
 }): AggregationCursor<AccountControls>;
