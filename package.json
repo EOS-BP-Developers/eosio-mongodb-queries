@@ -1,6 +1,6 @@
 {
   "name": "eosio-mongodb-queries",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "EOSIO MongoDB Queries",
   "main": "index.js",
   "types": "index.d.ts",

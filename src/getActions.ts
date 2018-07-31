@@ -10,7 +10,7 @@ import { Actions } from "./types/actions";
  * @param {string|Array<string>} [options.account] Filter by account contracts (eg: ["eosio","eosio.token"])
  * @param {string|Array<string>} [options.name] Filter by action names (eg: ["undelegatebw", "delegatebw"])
  * @param {number} [options.limit=25] Limit the maximum amount of of actions returned
- * @param {boolean} [options.irreversible=true] Irreversible transaction (eg: true/false)
+ * @param {boolean} [options.irreversible] Irreversible transaction (eg: true/false)
  * @param {number} [options.skip] Skips number of documents
  * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
  * @param {object} [options.match] Match by entries using MongoDB's $match (eg: {"data.from": "eosio"})
@@ -51,7 +51,6 @@ export function getActions(client: MongoClient, options: {
 
     // Default optional paramters
     if (isNullOrUndefined(options.limit)) { options.limit = 25; }
-    if (isNullOrUndefined(options.irreversible)) { options.irreversible = true; }
 
     // Convert (string|string[]) => string[]
     const names: string[] = Array.isArray(options.name) ? options.name : options.name ? [options.name] : [];
@@ -99,6 +98,8 @@ export function getActions(client: MongoClient, options: {
             connectFromField: "trx_id",
             connectToField: "trx_id",
             as: "transactions",
+            // maxDepth: 2,
+            // restrictSearchWithMatch: { "transactions.irreversible": true },
         },
     });
 

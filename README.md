@@ -118,12 +118,13 @@ EOSIO MongoDB Actions
 
 -   `client` **MongoClient** MongoDB Client
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
-    -   `options.accounts` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter by account contracts (eg: ["eosio","eosio.token"])
-    -   `options.names` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>?** Filter by action names (eg: ["undelegatebw", "delegatebw"])
+    -   `options.account` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>)?** Filter by account contracts (eg: ["eosio","eosio.token"])
+    -   `options.name` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>)?** Filter by action names (eg: ["undelegatebw", "delegatebw"])
     -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Limit the maximum amount of of actions returned (optional, default `25`)
+    -   `options.irreversible` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Irreversible transaction (eg: true/false)
     -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
     -   `options.sort` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
-    -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries (eg: {"data.from": "eosio"})
+    -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries using MongoDB's $match (eg: {"data.from": "eosio"})
     -   `options.trx_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Transaction Id
     -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
     -   `options.block_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Reference Block ID
@@ -134,9 +135,10 @@ EOSIO MongoDB Actions
 
 ```javascript
 const options = {
-    accounts: ["eosio"],
-    names: ["delegatebw", "undelegatebw"],
+    account: "eosio",
+    name: ["delegatebw", "undelegatebw"],
     match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
+    irreversible: true,
     sort: {block_num: -1}
 };
 const results = await getActions(client, options);
