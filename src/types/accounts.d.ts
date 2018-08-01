@@ -37,13 +37,7 @@ export interface Struct {
 
 export interface Field {
     name: string;
-    type: TypeEnum;
-}
-
-export enum TypeEnum {
-    AccountName = "account_name",
-    Asset = "asset",
-    String = "string",
+    type: string;
 }
 
 export interface Table {

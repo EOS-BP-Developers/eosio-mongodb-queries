@@ -109,6 +109,9 @@ This is made with ♥ by:
 -   [getAccount](#getaccount)
     -   [Parameters](#parameters-3)
     -   [Examples](#examples-3)
+-   [getAccounts](#getaccounts)
+    -   [Parameters](#parameters-4)
+    -   [Examples](#examples-4)
 
 ### getActions
 
@@ -231,3 +234,29 @@ const result = await getAccount(client, name, options);
 ```
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Account Details
+
+### getAccounts
+
+EOSIO MongoDB Accounts
+
+#### Parameters
+
+-   `client` **MongoClient** MongoDB Client
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+    -   `options.abi` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Does abi exist (eg: true/false)
+    -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Limit the maximum amount of of actions returned (optional, default `25`)
+    -   `options.sort` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Sort by ascending order (1) or descending order (-1) (eg: {controlled_account: -1})
+    -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
+    -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries (eg: {controlled_account: "eosio.saving"})
+
+#### Examples
+
+```javascript
+const options = {
+    match: {controlled_account: "eosio.saving"},
+};
+const results = await getAccounControls(client, options);
+console.log(await results.toArray());
+```
+
+Returns **AggregationCursor&lt;AccountControls>** MongoDB Aggregation Cursor
