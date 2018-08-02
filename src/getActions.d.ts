@@ -8,11 +8,11 @@ import { Actions } from "./types/actions";
  * @param {string|Array<string>} [options.account] Filter by account contracts (eg: ["eosio","eosio.token"])
  * @param {string|Array<string>} [options.name] Filter by action names (eg: ["undelegatebw", "delegatebw"])
  * @param {number} [options.limit=25] Limit the maximum amount of of actions returned
- * @param {boolean} [options.irreversible] Irreversible transaction (eg: true/false)
  * @param {number} [options.skip] Skips number of documents
  * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
  * @param {object} [options.match] Match by entries using MongoDB's $match (eg: {"data.from": "eosio"})
  * @param {string} [options.trx_id] Filter by exact Transaction Id
+ * @param {boolean} [options.irreversible] Irreversible transaction (eg: true/false)
  * @param {number} [options.block_num] Filter by exact Reference Block Number
  * @param {string} [options.block_id] Filter by exact Reference Block ID
  * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number

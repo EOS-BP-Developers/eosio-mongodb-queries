@@ -1,6 +1,6 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { isNullOrUndefined } from "util";
 import { Actions } from "./types/actions";
+import { addBlockFiltersToPipeline, setDefaultLimit } from "./utils";
 
 /**
  * EOSIO MongoDB Actions
@@ -10,11 +10,11 @@ import { Actions } from "./types/actions";
  * @param {string|Array<string>} [options.account] Filter by account contracts (eg: ["eosio","eosio.token"])
  * @param {string|Array<string>} [options.name] Filter by action names (eg: ["undelegatebw", "delegatebw"])
  * @param {number} [options.limit=25] Limit the maximum amount of of actions returned
- * @param {boolean} [options.irreversible] Irreversible transaction (eg: true/false)
  * @param {number} [options.skip] Skips number of documents
  * @param {object} [options.sort] Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
  * @param {object} [options.match] Match by entries using MongoDB's $match (eg: {"data.from": "eosio"})
  * @param {string} [options.trx_id] Filter by exact Transaction Id
+ * @param {boolean} [options.irreversible] Irreversible transaction (eg: true/false)
  * @param {number} [options.block_num] Filter by exact Reference Block Number
  * @param {string} [options.block_id] Filter by exact Reference Block ID
  * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
@@ -50,14 +50,14 @@ export function getActions(client: MongoClient, options: {
     const collection = db.collection("actions");
 
     // Default optional paramters
-    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
+    const limit = setDefaultLimit(options);
 
     // Convert (string|string[]) => string[]
     const names: string[] = Array.isArray(options.name) ? options.name : options.name ? [options.name] : [];
     const accounts: string[] = Array.isArray(options.account) ? options.account : options.account ? [options.account] : [];
 
     // MongoDB Pipeline
-    const pipeline: any = [];
+    const pipeline: object[] = [];
 
     // Filter by Transaction ID
     if (options.trx_id) { pipeline.push({$match: { trx_id: options.trx_id }}); }
@@ -125,20 +125,8 @@ export function getActions(client: MongoClient, options: {
         },
     });
 
-    // Filter by Reference Block Number
-    const {block_id, block_num, lte_block_num, gte_block_num, irreversible} = options;
-
-    if (irreversible) { pipeline.push({$match: { irreversible }}); }
-    if (block_id) { pipeline.push({$match: { block_id }}); }
-    if (!isNullOrUndefined(block_num)) { pipeline.push({$match: { block_num }}); }
-
-    // Both greater & lesser Block Number
-    if (!isNullOrUndefined(lte_block_num) && !isNullOrUndefined(gte_block_num)) {
-        pipeline.push({$match: { block_num: {$lte: lte_block_num, $gte: gte_block_num }}});
-    } else {
-        if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
-        if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
-    }
+    // Add block filters to Pipeline
+    addBlockFiltersToPipeline(pipeline, options);
 
     // Sort by ascending or decending based on attribute
     // options.sort //=> {block_num: -1}
@@ -147,7 +135,7 @@ export function getActions(client: MongoClient, options: {
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
-    if (limit !== Infinity && limit) { pipeline.push({$limit: limit }); }
+    if (limit) { pipeline.push({$limit: limit }); }
 
     return collection.aggregate<Actions>(pipeline);
 }

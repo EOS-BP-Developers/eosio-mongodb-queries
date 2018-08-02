@@ -1,6 +1,6 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { isNullOrUndefined } from "util";
 import { Blocks } from "./types/blocks";
+import { addBlockFiltersToPipeline, setDefaultLimit } from "./utils";
 
 /**
  * EOSIO MongoDB Blocks
@@ -42,25 +42,14 @@ export function getBlocks(client: MongoClient, options: {
     const pipeline: any = [];
 
     // Default optional paramters
-    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
+    const limit = setDefaultLimit(options);
 
     // Match by data entries
     // options.match //=> {"data.from": "eosio"}
     if (options.match) { pipeline.push({$match: options.match}); }
 
-    // Filter by Reference Block Number
-    const {block_id, block_num, lte_block_num, gte_block_num} = options;
-
-    if (block_id) { pipeline.push({$match: { block_id }}); }
-    if (!isNullOrUndefined(block_num)) { pipeline.push({$match: { block_num }}); }
-
-    // Both greater & lesser Block Number
-    if (!isNullOrUndefined(lte_block_num) && !isNullOrUndefined(gte_block_num)) {
-        pipeline.push({$match: { block_num: {$lte: lte_block_num, $gte: gte_block_num }}});
-    } else {
-        if (!isNullOrUndefined(lte_block_num)) { pipeline.push({$match: { block_num: {$lte: lte_block_num }}}); }
-        if (!isNullOrUndefined(gte_block_num)) { pipeline.push({$match: { block_num: {$gte: gte_block_num }}}); }
-    }
+    // Add block filters to Pipeline
+    addBlockFiltersToPipeline(pipeline, options);
 
     // Sort by ascending or decending based on attribute
     // options.sort //=> {block_num: -1}

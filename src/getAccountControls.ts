@@ -1,6 +1,6 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { isNullOrUndefined } from "util";
 import { AccountControls } from "./types/account_controls";
+import { setDefaultLimit } from "./utils";
 
 /**
  * EOSIO MongoDB Account Controls
@@ -30,7 +30,7 @@ export function getAccountControls(client: MongoClient, options: {
     const collection = db.collection("account_controls");
 
     // Default optional paramters
-    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
+    const limit = setDefaultLimit(options);
 
     // MongoDB Pipeline
     const pipeline: any = [];

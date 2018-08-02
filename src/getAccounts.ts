@@ -1,5 +1,5 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { isNullOrUndefined } from "util";
+import { setDefaultLimit } from "./utils";
 import { Accounts } from "./types/accounts";
 
 /**
@@ -32,7 +32,7 @@ export function getAccounts(client: MongoClient, options: {
     const collection = db.collection("accounts");
 
     // Default optional paramters
-    const limit = isNullOrUndefined(options.limit) ? 25 : options.limit;
+    const limit = setDefaultLimit(options);
 
     // MongoDB Pipeline
     const pipeline: any = [];

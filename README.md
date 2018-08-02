@@ -106,12 +106,17 @@ This is made with ♥ by:
 -   [getAccountControls](#getaccountcontrols)
     -   [Parameters](#parameters-2)
     -   [Examples](#examples-2)
--   [getAccount](#getaccount)
+-   [setDefaultLimit](#setdefaultlimit)
     -   [Parameters](#parameters-3)
     -   [Examples](#examples-3)
--   [getAccounts](#getaccounts)
+-   [addBlockFiltersToPipeline](#addblockfilterstopipeline)
     -   [Parameters](#parameters-4)
+-   [getAccount](#getaccount)
+    -   [Parameters](#parameters-5)
     -   [Examples](#examples-4)
+-   [getAccounts](#getaccounts)
+    -   [Parameters](#parameters-6)
+    -   [Examples](#examples-5)
 
 ### getActions
 
@@ -124,11 +129,11 @@ EOSIO MongoDB Actions
     -   `options.account` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>)?** Filter by account contracts (eg: ["eosio","eosio.token"])
     -   `options.name` **([string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String) \| [Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)>)?** Filter by action names (eg: ["undelegatebw", "delegatebw"])
     -   `options.limit` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Limit the maximum amount of of actions returned (optional, default `25`)
-    -   `options.irreversible` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Irreversible transaction (eg: true/false)
     -   `options.skip` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Skips number of documents
     -   `options.sort` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Sort by ascending order (1) or descending order (-1) (eg: {block_num: -1})
     -   `options.match` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Match by entries using MongoDB's $match (eg: {"data.from": "eosio"})
     -   `options.trx_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Transaction Id
+    -   `options.irreversible` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Irreversible transaction (eg: true/false)
     -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
     -   `options.block_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Reference Block ID
     -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
@@ -205,6 +210,38 @@ console.log(await results.toArray());
 
 Returns **AggregationCursor&lt;AccountControls>** MongoDB Aggregation Cursor
 
+### setDefaultLimit
+
+Set default limit
+
+#### Parameters
+
+-   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+
+#### Examples
+
+```javascript
+setDefaultLimit() //=> 25
+```
+
+Returns **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** Default Limit value
+
+### addBlockFiltersToPipeline
+
+Add Block Filters to Pipeline
+
+#### Parameters
+
+-   `pipeline` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)>** MongoDB Pipeline
+-   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional Parameters (optional, default `{}`)
+    -   `options.irreversible` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)?** Irreversible transaction (eg: true/false)
+    -   `options.block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by exact Reference Block Number
+    -   `options.block_id` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Filter by exact Reference Block ID
+    -   `options.lte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Less-than or equal (&lt;=) the Reference Block Number
+    -   `options.gte_block_num` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)?** Filter by Greater-than or equal (>=) the Reference Block Number
+
+Returns **void** Appends results to pipeline
+
 ### getAccount
 
 Get Account Details
@@ -229,7 +266,8 @@ const result = await getAccount(client, name, options);
 //   block_num: 2092984,
 //   stake_quantity: 1.8,
 //   stake_net_quantity: 0.9,
-//   stake_cpu_quantity: 0.9
+//   stake_cpu_quantity: 0.9,
+//   actions: [...Actions]
 // }
 ```
 

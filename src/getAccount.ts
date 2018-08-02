@@ -21,7 +21,8 @@ import { Actions } from "./types/actions";
  * //   block_num: 2092984,
  * //   stake_quantity: 1.8,
  * //   stake_net_quantity: 0.9,
- * //   stake_cpu_quantity: 0.9
+ * //   stake_cpu_quantity: 0.9,
+ * //   actions: [...Actions]
  * // }
  */
 export async function getAccount(client: MongoClient, name: string, options: {
