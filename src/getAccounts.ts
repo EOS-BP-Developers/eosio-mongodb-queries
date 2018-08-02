@@ -1,6 +1,6 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { setDefaultLimit } from "./utils";
 import { Accounts } from "./types/accounts";
+import { setDefaultLimit } from "./utils";
 
 /**
  * EOSIO MongoDB Accounts

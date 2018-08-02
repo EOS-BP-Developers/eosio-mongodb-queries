@@ -1,4 +1,4 @@
-import { getAccount } from "../";
+import { getAccount } from "..";
 import { connect } from "./mongodb";
 
 (async () => {
