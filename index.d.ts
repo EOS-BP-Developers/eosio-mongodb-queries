@@ -4,3 +4,4 @@ export { getAccountControls } from "./src/getAccountControls";
 export { getAccount } from "./src/getAccount";
 export { getAccounts } from "./src/getAccounts";
 export { count } from "./src/count";
+export * from "./types";

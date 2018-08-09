@@ -1,5 +1,5 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { Blocks } from "./types/blocks";
+import { Blocks } from "../types/blocks";
 /**
  * EOSIO MongoDB Blocks
  *

@@ -1,5 +1,10 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { Actions } from "./types/actions";
+import { Act } from "../types/action_traces";
+export interface Action extends Act {
+    irreversible: boolean;
+    block_id: string;
+    block_num: number;
+}
 /**
  * EOSIO MongoDB Actions
  *
@@ -17,12 +22,12 @@ import { Actions } from "./types/actions";
  * @param {string} [options.block_id] Filter by exact Reference Block ID
  * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
- * @returns {AggregationCursor<Actions>} MongoDB Aggregation Cursor
+ * @returns {AggregationCursor<Action>} MongoDB Aggregation Cursor
  * @example
  * const options = {
  *     account: "eosio",
  *     name: ["delegatebw", "undelegatebw"],
- *     match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
+ *     match: {"act.data.from": "eosnationftw", "act.data.receiver": "eosnationftw"},
  *     irreversible: true,
  *     sort: {block_num: -1}
  * };
@@ -42,4 +47,4 @@ export declare function getActions(client: MongoClient, options?: {
     skip?: number;
     limit?: number;
     sort?: object;
-}): AggregationCursor<Actions>;
+}): AggregationCursor<Action>;

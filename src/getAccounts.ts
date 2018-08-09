@@ -1,5 +1,5 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { Accounts } from "./types/accounts";
+import { Accounts } from "../types/accounts";
 import { setDefaultLimit } from "./utils";
 
 /**

@@ -1,6 +1,12 @@
 import { AggregationCursor, MongoClient } from "mongodb";
-import { Actions } from "./types/actions";
+import { Act } from "../types/action_traces";
 import { addBlockFiltersToPipeline, setDefaultLimit } from "./utils";
+
+export interface Action extends Act {
+    irreversible: boolean;
+    block_id: string;
+    block_num: number;
+}
 
 /**
  * EOSIO MongoDB Actions
@@ -19,12 +25,12 @@ import { addBlockFiltersToPipeline, setDefaultLimit } from "./utils";
  * @param {string} [options.block_id] Filter by exact Reference Block ID
  * @param {number} [options.lte_block_num] Filter by Less-than or equal (<=) the Reference Block Number
  * @param {number} [options.gte_block_num] Filter by Greater-than or equal (>=) the Reference Block Number
- * @returns {AggregationCursor<Actions>} MongoDB Aggregation Cursor
+ * @returns {AggregationCursor<Action>} MongoDB Aggregation Cursor
  * @example
  * const options = {
  *     account: "eosio",
  *     name: ["delegatebw", "undelegatebw"],
- *     match: {"data.from": "eosnationftw", "data.receiver": "eosnationftw"},
+ *     match: {"act.data.from": "eosnationftw", "act.data.receiver": "eosnationftw"},
  *     irreversible: true,
  *     sort: {block_num: -1}
  * };
@@ -44,10 +50,10 @@ export function getActions(client: MongoClient, options: {
     skip?: number,
     limit?: number,
     sort?: object,
-} = {}): AggregationCursor<Actions> {
+} = {}): AggregationCursor<Action> {
     // Setup MongoDB collection
     const db = client.db("EOS");
-    const collection = db.collection("actions");
+    const collection = db.collection("action_traces");
 
     // Default optional paramters
     const limit = setDefaultLimit(options);
@@ -117,9 +123,6 @@ export function getActions(client: MongoClient, options: {
             data: 1,
             // join transactions
             irreversible: { $arrayElemAt: [ "$transactions.irreversible", 0 ] },
-            transaction_header: { $arrayElemAt: [ "$transactions.transaction_header", 0 ] },
-            signing_keys: { $arrayElemAt: [ "$transactions.signing_keys", 0 ] },
-            signatures: { $arrayElemAt: [ "$transactions.signatures", 0 ] },
             block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
             block_num: { $arrayElemAt: [ "$transactions.block_num", 0 ] },
         },
@@ -130,12 +133,12 @@ export function getActions(client: MongoClient, options: {
 
     // Sort by ascending or decending based on attribute
     // options.sort //=> {block_num: -1}
-    // options.sort //=> {"data.from": -1}
+    // options.sort //=> {"act.data.from": -1}
     if (options.sort) { pipeline.push({$sort: options.sort}); }
 
     // Support Pagination using Skip & Limit
     if (options.skip) { pipeline.push({$skip: options.skip }); }
     if (limit) { pipeline.push({$limit: limit }); }
 
-    return collection.aggregate<Actions>(pipeline);
+    return collection.aggregate<Action>(pipeline);
 }

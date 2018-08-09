@@ -10,8 +10,8 @@ export interface Blocks {
     block:            Block;
     block_num:        number;
     createdAt:        string;
-    irreversible:     boolean;
     in_current_chain: boolean;
+    irreversible:     boolean;
     updatedAt:        string;
     validated:        boolean;
 }

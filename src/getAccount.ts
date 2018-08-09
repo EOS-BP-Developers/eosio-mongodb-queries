@@ -1,6 +1,5 @@
 import { MongoClient } from "mongodb";
 import { getActions } from "./getActions";
-import { Actions } from "./types/actions";
 
 /**
  * Get Account Details
@@ -29,7 +28,7 @@ export async function getAccount(client: MongoClient, name: string, options: {
     lte_block_num?: number,
 } = {}) {
     // Get Actions
-    const actions: Actions[] = await getActions(client, {
+    const actions = await getActions(client, {
         account: "eosio",
         name: ["delegatebw", "undelegatebw"],
         match: {$or: [{"data.from": name}, {"data.receiver": name}]},
