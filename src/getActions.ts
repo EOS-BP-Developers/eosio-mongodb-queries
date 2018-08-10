@@ -74,7 +74,7 @@ export function getActions(client: MongoClient, options: {
         pipeline.push({
             $match: {
                 $or: accounts.map((account) => {
-                    return { account };
+                    return { "act.account": account };
                 }),
             },
         });
@@ -86,7 +86,7 @@ export function getActions(client: MongoClient, options: {
         pipeline.push({
             $match: {
                 $or: names.map((name) => {
-                    return { name };
+                    return { "act.name": name };
                 }),
             },
         });
@@ -112,15 +112,10 @@ export function getActions(client: MongoClient, options: {
     // Add block_num + block_id and other fields
     pipeline.push({
         $project: {
-            // actions
+            // action_traces
             _id: 1,
-            action_num: 1,
+            act: 1,
             trx_id: 1,
-            cfa: 1,
-            account: 1,
-            name: 1,
-            authorization: 1,
-            data: 1,
             // join transactions
             irreversible: { $arrayElemAt: [ "$transactions.irreversible", 0 ] },
             block_id: { $arrayElemAt: [ "$transactions.block_id", 0 ] },
